@@ -124,6 +124,10 @@ Feature 간 통신은 아래 Core 서비스를 통해서만 한다:
 | 사용자 캘린더 | `RoaCalendar` | Foundation.Calendar 충돌 방지 |
 | 색상 enum | `EventColor` | Core 레이어 배치 (전 Feature 공유) |
 
+## 디자인 시스템
+
+DESIGN.md를 반드시 읽고 UI 결정을 한다. 폰트, 색상, 스페이싱, 모션은 DESIGN.md에 정의됨. 이탈 시 사용자 승인 필요.
+
 ## 날짜 연산 (필수)
 
 캘린더 앱이므로 날짜 버그는 치명적이다:
