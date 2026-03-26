@@ -12,19 +12,19 @@ struct ContentView: View {
             }
 
             Tab("집중", systemImage: "timer", value: .pomodoro) {
-                PomodoroPlaceholderView()
+                PomodoroTimerView()
             }
 
             Tab("할 일", systemImage: "checkmark.circle", value: .todo) {
-                TodoPlaceholderView()
+                TodoTodayView()
             }
 
             Tab("관리", systemImage: "chart.bar", value: .selfManage) {
-                SelfManagePlaceholderView()
+                SelfManageDashboardView()
             }
 
             Tab("설정", systemImage: "gearshape", value: .settings) {
-                SettingsPlaceholderView()
+                SettingsView()
             }
         }
         .tint(Color.primary600)
