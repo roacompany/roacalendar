@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>로아 캘린더 — 오늘 할 일</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<style>
+  :root {
+    --primary: #2563EB;
+    --accent: #F97316;
+    --bg: #FAFAF8;
+    --surface: #FFFFFF;
+    --text: #1C1C1A;
+    --text-secondary: #525250;
+    --text-muted: #A3A3A0;
+    --border: #E5E5E0;
+    --border-light: #F5F5F3;
+    --success: #22C55E;
+    --error: #EF4444;
+    --info: #3B82F6;
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-full: 9999px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --font: 'Pretendard Variable', -apple-system, system-ui, sans-serif;
+  }
+  [data-theme="dark"] {
+    --bg: #191F28; --surface: #242B35; --text: #F5F5F3;
+    --text-secondary: #A3A3A0; --text-muted: #737370;
+    --border: #333B48; --border-light: #2A3140;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--font); background: var(--bg); color: var(--text);
+    width: 375px; margin: 0 auto; min-height: 812px;
+    display: flex; flex-direction: column;
+    transition: background 0.2s, color 0.2s;
+  }
+  .theme-toggle {
+    position: fixed; top: 8px; right: 8px; z-index: 100;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--border);
+    font-size: 14px; cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+  }
+
+  .status-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 24px 4px; font-size: 12px; font-weight: 600;
+  }
+  .header {
+    padding: 8px 16px 4px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .header-left { display: flex; align-items: center; gap: 8px; }
+  .header-title { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; }
+  .count-badge {
+    min-width: 24px; height: 24px; padding: 0 7px;
+    border-radius: var(--radius-full);
+    background: var(--primary); color: white;
+    font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* Load bar */
+  .load-bar {
+    margin: 8px 16px 10px;
+    padding: 10px 14px; border-radius: var(--radius-md);
+    background: var(--surface); border: 1px solid var(--border-light);
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600;
+  }
+  .load-ok { color: var(--success); }
+  .load-text { color: var(--text-secondary); }
+  .load-divider { color: var(--border); }
+  .load-free { color: var(--text-muted); }
+
+  /* Smart view tabs */
+  .smart-tabs {
+    display: flex; gap: 0; padding: 0 16px 8px;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .smart-tabs::-webkit-scrollbar { display: none; }
+  .smart-tab {
+    padding: 6px 13px; border-radius: var(--radius-full);
+    font-size: 12px; font-weight: 600; border: none; cursor: pointer;
+    background: transparent; color: var(--text-muted);
+    transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
+  }
+  .smart-tab.active {
+    background: var(--primary); color: white;
+  }
+
+  /* Todo list */
+  .todo-list { padding: 0 16px; display: flex; flex-direction: column; gap: 2px; }
+
+  /* Todo item */
+  .todo-item {
+    display: flex; align-items: center; gap: 0;
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.15s;
+    position: relative;
+  }
+  .todo-item:active { transform: scale(0.98); }
+
+  /* Priority bar */
+  .priority-bar {
+    width: 3px; align-self: stretch; flex-shrink: 0;
+    border-radius: 0;
+  }
+  .p-high { background: var(--error); }
+  .p-medium { background: #EAB308; }
+  .p-low { background: var(--info); }
+  .p-none { background: transparent; }
+
+  /* Checkbox */
+  .todo-check {
+    width: 22px; height: 22px; min-width: 22px; margin: 0 10px 0 10px;
+    border: 2px solid var(--border); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .todo-check.done {
+    background: var(--success); border-color: var(--success);
+    font-size: 12px; color: white;
+  }
+
+  /* Todo content */
+  .todo-content { flex: 1; padding: 11px 10px 11px 0; min-width: 0; }
+  .todo-title {
+    font-size: 14px; font-weight: 600;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .todo-title.done-text {
+    text-decoration: line-through; color: var(--text-muted); font-weight: 400;
+  }
+  .todo-meta {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 4px;
+    margin-top: 4px;
+  }
+  .meta-chip {
+    padding: 1px 6px; border-radius: var(--radius-full);
+    font-size: 10px; font-weight: 600;
+  }
+  .meta-due-today { background: rgba(239,68,68,0.12); color: var(--error); }
+  .meta-due-tomorrow { background: rgba(234,179,8,0.12); color: #B45309; }
+  [data-theme="dark"] .meta-due-tomorrow { color: #FCD34D; }
+  .meta-tag { background: var(--border-light); color: var(--text-muted); }
+  .meta-pomodoro { color: var(--accent); font-size: 10px; font-weight: 600; }
+  .meta-streak { color: var(--accent); font-size: 10px; font-weight: 700; }
+  .meta-habit {
+    background: rgba(37,99,235,0.1); color: var(--primary);
+    padding: 1px 6px; border-radius: var(--radius-full);
+    font-size: 10px; font-weight: 600;
+  }
+
+  /* Section separator */
+  .todo-section-label {
+    font-size: 11px; font-weight: 700; color: var(--text-muted);
+    padding: 12px 16px 4px;
+    text-transform: uppercase; letter-spacing: 0.4px;
+  }
+
+  /* FAB */
+  .fab {
+    position: fixed; bottom: 72px; right: calc((100vw - 375px)/2 + 20px);
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--primary); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: 300; border: none;
+    box-shadow: var(--shadow-md); cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .fab:active { transform: scale(0.92); }
+
+  /* Tab Bar */
+  .tab-bar {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 375px;
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 6px 0 20px;
+    background: var(--surface);
+    border-top: 1px solid var(--border-light);
+  }
+  .tab-item {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    font-size: 10px; font-weight: 500; color: var(--text-muted);
+    cursor: pointer; padding: 4px 8px;
+    transition: color 0.2s; position: relative;
+  }
+  .tab-item.active { color: var(--primary); }
+  .tab-icon { font-size: 22px; }
+  .tab-badge {
+    position: absolute; top: -2px; right: -4px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--error);
+  }
+
+  .bottom-spacer { height: 72px; }
+</style>
+</head>
+<body data-theme="dark">
+<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
+
+<div class="status-bar">
+  <span>9:41</span>
+  <span style="font-size:10px;">●●●&nbsp;&nbsp;📶&nbsp;&nbsp;🔋</span>
+</div>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-left">
+    <span class="header-title">오늘</span>
+    <span class="count-badge">8</span>
+  </div>
+  <div style="display:flex;gap:6px;">
+    <button style="width:32px;height:32px;border-radius:50%;background:var(--surface);border:1px solid var(--border-light);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;">🔍</button>
+    <button style="width:32px;height:32px;border-radius:50%;background:var(--surface);border:1px solid var(--border-light);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;">⋯</button>
+  </div>
+</div>
+
+<!-- Daily load bar -->
+<div class="load-bar">
+  <span>📊</span>
+  <span class="load-ok">8개 Task · 예상 ~4.5시간</span>
+  <span class="load-divider">|</span>
+  <span class="load-free">빈 시간: 5시간</span>
+</div>
+
+<!-- Smart view tabs -->
+<div class="smart-tabs">
+  <button class="smart-tab">Inbox</button>
+  <button class="smart-tab active">Today</button>
+  <button class="smart-tab">Upcoming</button>
+  <button class="smart-tab">Anytime</button>
+  <button class="smart-tab">Someday</button>
+  <button class="smart-tab">Flagged</button>
+</div>
+
+<!-- Todo list -->
+<div class="todo-list">
+
+  <!-- 1. 기획안 최종 제출 - high, due today, 업무, 3/3 -->
+  <div class="todo-item" style="margin-bottom:2px;">
+    <div class="priority-bar p-high"></div>
+    <div class="todo-check"></div>
+    <div class="todo-content">
+      <div class="todo-title">기획안 최종 제출</div>
+      <div class="todo-meta">
+        <span class="meta-chip meta-due-today">오늘 마감</span>
+        <span class="meta-chip meta-tag">업무</span>
+        <span class="meta-pomodoro">🍅 3/3</span>
+      </div>
+    </div>
+    <span style="font-size:16px;padding-right:12px;color:var(--text-muted);">›</span>
+  </div>
+
+  <!-- 2. 주간 보고서 작성 - medium, due tomorrow, 업무, 0/2 -->
+  <div class="todo-item" style="margin-bottom:2px;">
+    <div class="priority-bar p-medium"></div>
+    <div class="todo-check"></div>
+    <div class="todo-content">
+      <div class="todo-title">주간 보고서 작성</div>
+      <div class="todo-meta">
+        <span class="meta-chip meta-due-tomorrow">내일 마감</span>
+        <span class="meta-chip meta-tag">업무</span>
+        <span class="meta-pomodoro">🍅 0/2</span>
+      </div>
+    </div>
+    <span style="font-size:16px;padding-right:12px;color:var(--text-muted);">›</span>
+  </div>
+
+  <!-- 3. 이메일 정리 - low, done -->
+  <div class="todo-item" style="margin-bottom:2px;opacity:0.75;">
+    <div class="priority-bar p-low"></div>
+    <div class="todo-check done">✓</div>
+    <div class="todo-content">
+      <div class="todo-title done-text">이메일 정리</div>
+      <div class="todo-meta">
+        <span class="meta-chip meta-tag">업무</span>
+      </div>
+    </div>
+    <span style="font-size:16px;padding-right:12px;color:var(--text-muted);">›</span>
+  </div>
+
+  <!-- 4. 운동 30분 - high, 건강, streak -->
+  <div class="todo-item" style="margin-bottom:2px;">
+    <div class="priority-bar p-high"></div>
+    <div class="todo-check"></div>
+    <div class="todo-content">
+      <div class="todo-title">운동 30분</div>
+      <div class="todo-meta">
+        <span class="meta-chip meta-tag">건강</span>
+        <span class="meta-streak">🔥 12일 연속</span>
+      </div>
+    </div>
+    <span style="font-size:16px;padding-right:12px;color:var(--text-muted);">›</span>
+  </div>
+
+  <!-- 5. 독서 20분 - medium, done, 학습 -->
+  <div class="todo-item" style="margin-bottom:2px;opacity:0.75;">
+    <div class="priority-bar p-medium"></div>
+    <div class="todo-check done">✓</div>
+    <div class="todo-content">
+      <div class="todo-title done-text">독서 20분</div>
+      <div class="todo-meta">
+        <span class="meta-chip meta-tag">학습</span>
+      </div>
+    </div>
+    <span style="font-size:16px;padding-right:12px;color:var(--text-muted);">›</span>
+  </div>
+
+  <!-- 6. 팀 회의 준비 - medium, 업무 -->
+  <div class="todo-item" style="margin-bottom:2px;">
+    <div class="priority-bar p-medium"></div>
+    <div class="todo-check"></div>
+    <div class="todo-content">
+      <div class="todo-title">팀 회의 준비</div>
+      <div class="todo-meta">
+        <span class="meta-chip meta-tag">업무</span>
+      </div>
+    </div>
+    <span style="font-size:16px;padding-right:12px;color:var(--text-muted);">›</span>
+  </div>
+
+  <!-- 7. 장보기 - none, 개인 -->
+  <div class="todo-item" style="margin-bottom:2px;">
+    <div class="priority-bar p-none"></div>
+    <div class="todo-check"></div>
+    <div class="todo-content">
+      <div class="todo-title">장보기</div>
+      <div class="todo-meta">
+        <span class="meta-chip meta-tag">개인</span>
+      </div>
+    </div>
+    <span style="font-size:16px;padding-right:12px;color:var(--text-muted);">›</span>
+  </div>
+
+  <!-- 8. 명상 10분 - low, 건강, 습관 -->
+  <div class="todo-item" style="margin-bottom:2px;">
+    <div class="priority-bar p-low"></div>
+    <div class="todo-check"></div>
+    <div class="todo-content">
+      <div class="todo-title">명상 10분</div>
+      <div class="todo-meta">
+        <span class="meta-chip meta-tag">건강</span>
+        <span class="meta-habit">습관</span>
+      </div>
+    </div>
+    <span style="font-size:16px;padding-right:12px;color:var(--text-muted);">›</span>
+  </div>
+
+</div>
+
+<div class="bottom-spacer"></div>
+
+<!-- FAB -->
+<button class="fab">+</button>
+
+<!-- Tab Bar -->
+<div class="tab-bar">
+  <div class="tab-item">
+    <span class="tab-icon">📅</span>
+    <span>캘린더</span>
+  </div>
+  <div class="tab-item">
+    <span class="tab-icon">🍅</span>
+    <span>집중</span>
+  </div>
+  <div class="tab-item active">
+    <span class="tab-icon">☑️</span>
+    <span>할 일</span>
+  </div>
+  <div class="tab-item">
+    <span class="tab-icon">📊</span>
+    <span>관리</span>
+  </div>
+  <div class="tab-item">
+    <span class="tab-icon">⚙️</span>
+    <span>설정</span>
+  </div>
+</div>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.getElementById('themeBtn');
+  if (html.getAttribute('data-theme') === 'dark') {
+    html.removeAttribute('data-theme');
+    btn.textContent = '🌙';
+  } else {
+    html.setAttribute('data-theme', 'dark');
+    btn.textContent = '☀️';
+  }
+}
+</script>
+</body>
+</html>

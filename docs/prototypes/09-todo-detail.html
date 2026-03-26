@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>로아 캘린더 — 태스크 상세</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<style>
+  :root {
+    --primary: #2563EB;
+    --accent: #F97316;
+    --bg: #FAFAF8;
+    --surface: #FFFFFF;
+    --text: #1C1C1A;
+    --text-secondary: #525250;
+    --text-muted: #A3A3A0;
+    --border: #E5E5E0;
+    --border-light: #F5F5F3;
+    --success: #22C55E;
+    --error: #EF4444;
+    --info: #3B82F6;
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-full: 9999px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --font: 'Pretendard Variable', -apple-system, system-ui, sans-serif;
+  }
+  [data-theme="dark"] {
+    --bg: #191F28; --surface: #242B35; --text: #F5F5F3;
+    --text-secondary: #A3A3A0; --text-muted: #737370;
+    --border: #333B48; --border-light: #2A3140;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--font); background: var(--bg); color: var(--text);
+    width: 375px; margin: 0 auto; min-height: 812px;
+    display: flex; flex-direction: column;
+    transition: background 0.2s, color 0.2s;
+  }
+  .theme-toggle {
+    position: fixed; top: 8px; right: 8px; z-index: 100;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--border);
+    font-size: 14px; cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+  }
+
+  .status-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 24px 4px; font-size: 12px; font-weight: 600;
+  }
+
+  /* Nav bar */
+  .nav-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 16px 6px;
+  }
+  .nav-back {
+    display: flex; align-items: center; gap: 2px;
+    color: var(--primary); font-size: 15px; font-weight: 600;
+    cursor: pointer; background: none; border: none;
+  }
+  .nav-back span { font-size: 18px; }
+  .nav-actions { display: flex; gap: 12px; align-items: center; }
+  .nav-edit {
+    color: var(--primary); font-size: 15px; font-weight: 600;
+    background: none; border: none; cursor: pointer;
+  }
+  .nav-delete { font-size: 18px; cursor: pointer; }
+
+  /* Scroll content */
+  .scroll-content {
+    flex: 1; overflow-y: auto; padding-bottom: 88px;
+  }
+
+  /* Title block */
+  .title-block {
+    padding: 8px 16px 12px;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .task-title-input {
+    font-size: 22px; font-weight: 800; letter-spacing: -0.5px;
+    color: var(--text); background: transparent; border: none; outline: none;
+    width: 100%; font-family: var(--font);
+    line-height: 1.3;
+  }
+  .status-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+  .status-chip {
+    padding: 4px 12px; border-radius: var(--radius-full);
+    font-size: 12px; font-weight: 700;
+    background: rgba(37,99,235,0.12); color: var(--primary);
+  }
+
+  /* Detail sections */
+  .detail-section {
+    background: var(--surface); margin: 10px 16px;
+    border-radius: var(--radius-lg); border: 1px solid var(--border-light);
+    overflow: hidden;
+  }
+  .detail-row {
+    display: flex; align-items: center;
+    padding: 13px 14px;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .detail-row:last-child { border-bottom: none; }
+  .row-icon { font-size: 15px; width: 22px; flex-shrink: 0; }
+  .row-label {
+    font-size: 14px; font-weight: 600; color: var(--text-secondary);
+    width: 72px; flex-shrink: 0;
+  }
+  .row-value {
+    flex: 1; font-size: 14px; font-weight: 500; color: var(--text);
+  }
+  .row-value.muted { color: var(--text-muted); }
+  .row-value.red { color: var(--error); font-weight: 600; }
+  .row-chevron { color: var(--text-muted); font-size: 13px; font-weight: 600; }
+
+  /* Priority selector */
+  .priority-selector {
+    display: flex; gap: 6px; flex: 1;
+  }
+  .p-btn {
+    padding: 4px 10px; border-radius: var(--radius-full);
+    font-size: 11px; font-weight: 700; border: 1.5px solid var(--border);
+    background: transparent; cursor: pointer; color: var(--text-muted);
+    transition: all 0.15s;
+  }
+  .p-btn.p1 { border-color: var(--info); color: var(--info); background: rgba(59,130,246,0.08); }
+  .p-btn.p2 { border-color: #EAB308; color: #B45309; background: rgba(234,179,8,0.08); }
+  [data-theme="dark"] .p-btn.p2 { color: #FCD34D; }
+  .p-btn.p3.active { border-color: var(--error); color: var(--error); background: rgba(239,68,68,0.08); }
+  .p-btn.p4 { border-color: var(--text-muted); color: var(--text-muted); }
+
+  /* Toggle */
+  .toggle-wrap { display: flex; align-items: center; gap: 6px; }
+  .toggle {
+    width: 40px; height: 24px; border-radius: 12px;
+    background: var(--border); position: relative;
+    cursor: pointer; transition: background 0.2s; flex-shrink: 0;
+  }
+  .toggle.on { background: var(--error); }
+  .toggle::after {
+    content: ''; position: absolute;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: white; top: 3px; left: 3px;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle.on::after { transform: translateX(16px); }
+
+  /* Tags row */
+  .tags-row {
+    display: flex; flex-wrap: wrap; gap: 6px; flex: 1; align-items: center;
+  }
+  .tag-chip {
+    padding: 3px 10px; border-radius: var(--radius-full);
+    font-size: 12px; font-weight: 600;
+    background: var(--border-light); color: var(--text-secondary);
+  }
+  .tag-chip.red { background: rgba(239,68,68,0.1); color: var(--error); }
+  .add-tag-btn {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--border-light); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: var(--text-muted);
+  }
+
+  /* Subtask */
+  .subtask-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .subtask-item:last-child { border-bottom: none; }
+  .subtask-check {
+    width: 20px; height: 20px; min-width: 20px;
+    border: 2px solid var(--border); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .subtask-check.done { background: var(--success); border-color: var(--success); color: white; }
+  .subtask-title { font-size: 14px; font-weight: 500; flex: 1; }
+  .subtask-title.done-text { text-decoration: line-through; color: var(--text-muted); }
+  .add-subtask-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 11px 14px; font-size: 14px;
+    color: var(--primary); font-weight: 600; cursor: pointer;
+    background: none; border: none; font-family: var(--font);
+  }
+
+  /* Pomodoro section in detail */
+  .pomo-section {
+    display: flex; align-items: center; gap: 10px;
+    padding: 13px 14px;
+  }
+  .pomo-info { flex: 1; }
+  .pomo-label { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+  .pomo-count { font-size: 16px; font-weight: 800; color: var(--accent); margin-top: 2px; }
+  .pomo-start-btn {
+    padding: 8px 16px; border-radius: var(--radius-full);
+    background: rgba(249,115,22,0.12); color: var(--accent);
+    font-size: 13px; font-weight: 700; border: none; cursor: pointer;
+    font-family: var(--font);
+  }
+
+  /* Notes */
+  .notes-area {
+    width: 100%; background: transparent; border: none; outline: none;
+    font-size: 14px; font-family: var(--font); color: var(--text);
+    resize: none; padding: 13px 14px; min-height: 64px;
+    line-height: 1.6;
+  }
+  .notes-area::placeholder { color: var(--text-muted); }
+
+  /* Delete button */
+  .delete-section { padding: 8px 16px 16px; }
+  .delete-btn {
+    width: 100%; padding: 14px; border-radius: var(--radius-md);
+    background: rgba(239,68,68,0.08); color: var(--error);
+    font-size: 15px; font-weight: 700; border: 1.5px solid rgba(239,68,68,0.2);
+    cursor: pointer; font-family: var(--font); transition: background 0.15s;
+  }
+  .delete-btn:active { background: rgba(239,68,68,0.14); }
+
+  /* Section heading inside card */
+  .card-heading {
+    font-size: 11px; font-weight: 700; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.4px;
+    padding: 12px 14px 4px;
+  }
+
+  /* Flag row */
+  .flag-active { color: var(--accent); }
+
+  /* Tab Bar */
+  .tab-bar {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 375px;
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 6px 0 20px;
+    background: var(--surface);
+    border-top: 1px solid var(--border-light);
+  }
+  .tab-item {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    font-size: 10px; font-weight: 500; color: var(--text-muted);
+    cursor: pointer; padding: 4px 8px;
+    transition: color 0.2s; position: relative;
+  }
+  .tab-item.active { color: var(--primary); }
+  .tab-icon { font-size: 22px; }
+  .tab-badge {
+    position: absolute; top: -2px; right: -4px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--error);
+  }
+</style>
+</head>
+<body data-theme="dark">
+<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
+
+<div class="status-bar">
+  <span>9:41</span>
+  <span style="font-size:10px;">●●●&nbsp;&nbsp;📶&nbsp;&nbsp;🔋</span>
+</div>
+
+<!-- Nav bar -->
+<div class="nav-bar">
+  <button class="nav-back"><span>‹</span> 오늘</button>
+  <div class="nav-actions">
+    <button class="nav-edit">편집</button>
+    <span class="nav-delete">🗑️</span>
+  </div>
+</div>
+
+<!-- Scroll content -->
+<div class="scroll-content">
+
+  <!-- Title block -->
+  <div class="title-block">
+    <input class="task-title-input" type="text" value="기획안 최종 제출">
+    <div class="status-row">
+      <div class="status-chip">진행 중</div>
+    </div>
+  </div>
+
+  <!-- Priority & Urgent -->
+  <div class="detail-section">
+    <div class="detail-row">
+      <span class="row-icon">🚦</span>
+      <span class="row-label">우선순위</span>
+      <div class="priority-selector">
+        <button class="p-btn p1">낮음</button>
+        <button class="p-btn p2">보통</button>
+        <button class="p-btn p3 active">높음</button>
+        <button class="p-btn p4">없음</button>
+      </div>
+    </div>
+    <div class="detail-row">
+      <span class="row-icon">⚡</span>
+      <span class="row-label">긴급</span>
+      <div class="toggle-wrap">
+        <div class="toggle on"></div>
+        <span style="font-size:13px;font-weight:600;color:var(--error);">켜짐</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dates -->
+  <div class="detail-section">
+    <div class="detail-row">
+      <span class="row-icon">📥</span>
+      <span class="row-label">지연일</span>
+      <span class="row-value muted">없음</span>
+      <span class="row-chevron">›</span>
+    </div>
+    <div class="detail-row">
+      <span class="row-icon">📅</span>
+      <span class="row-label">예정일</span>
+      <span class="row-value">3월 26일</span>
+      <span class="row-chevron">›</span>
+    </div>
+    <div class="detail-row">
+      <span class="row-icon">⏰</span>
+      <span class="row-label">마감일</span>
+      <span class="row-value red">3월 26일 · 오늘 마감</span>
+      <span class="row-chevron" style="color:var(--error);">›</span>
+    </div>
+    <div class="detail-row">
+      <span class="row-icon">🔔</span>
+      <span class="row-label">알림</span>
+      <span class="row-value">마감 1시간 전</span>
+      <span style="font-size:18px;color:var(--primary);cursor:pointer;font-weight:300;">+</span>
+    </div>
+  </div>
+
+  <!-- Project & Calendar -->
+  <div class="detail-section">
+    <div class="detail-row">
+      <span class="row-icon">📁</span>
+      <span class="row-label">프로젝트</span>
+      <span class="row-value">Q1 마케팅</span>
+      <span class="row-chevron">›</span>
+    </div>
+    <div class="detail-row">
+      <span class="row-icon">🗓</span>
+      <span class="row-label">캘린더</span>
+      <span class="row-value" style="display:flex;align-items:center;gap:6px;">
+        <span style="width:10px;height:10px;border-radius:50%;background:#2563EB;display:inline-block;"></span>
+        업무
+      </span>
+      <span class="row-chevron">›</span>
+    </div>
+  </div>
+
+  <!-- Tags -->
+  <div class="detail-section">
+    <div class="detail-row">
+      <span class="row-icon">🏷</span>
+      <span class="row-label">태그</span>
+      <div class="tags-row">
+        <span class="tag-chip">기획</span>
+        <span class="tag-chip red">긴급</span>
+        <button class="add-tag-btn">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subtasks -->
+  <div class="detail-section">
+    <div class="card-heading">서브태스크</div>
+    <div class="subtask-item">
+      <div class="subtask-check done">✓</div>
+      <span class="subtask-title done-text">초안 작성</span>
+    </div>
+    <div class="subtask-item">
+      <div class="subtask-check"></div>
+      <span class="subtask-title">팀장 리뷰</span>
+    </div>
+    <div class="subtask-item">
+      <div class="subtask-check"></div>
+      <span class="subtask-title">최종 수정</span>
+    </div>
+    <button class="add-subtask-btn">+ 서브태스크 추가</button>
+  </div>
+
+  <!-- Pomodoro -->
+  <div class="detail-section">
+    <div class="pomo-section">
+      <div class="pomo-info">
+        <div class="pomo-label">뽀모도로 세션</div>
+        <div class="pomo-count">🍅 3/3 세션 완료</div>
+      </div>
+      <button class="pomo-start-btn">🍅 집중 시작</button>
+    </div>
+  </div>
+
+  <!-- Notes -->
+  <div class="detail-section">
+    <div class="card-heading">메모</div>
+    <textarea class="notes-area" placeholder="메모를 입력하세요...">마케팅 전략 기획안 — Q1 목표 달성을 위한 핵심 캠페인 제안서. 경쟁사 분석 포함 필요.</textarea>
+  </div>
+
+  <!-- Repeat & Flag -->
+  <div class="detail-section">
+    <div class="detail-row">
+      <span class="row-icon">🔁</span>
+      <span class="row-label">반복</span>
+      <span class="row-value muted">반복 안 함</span>
+      <span class="row-chevron">›</span>
+    </div>
+    <div class="detail-row">
+      <span class="row-icon">🚩</span>
+      <span class="row-label">깃발</span>
+      <div class="toggle-wrap">
+        <div class="toggle"></div>
+        <span style="font-size:13px;font-weight:600;color:var(--text-muted);">꺼짐</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete -->
+  <div class="delete-section">
+    <button class="delete-btn">태스크 삭제</button>
+  </div>
+
+</div>
+
+<!-- Tab Bar -->
+<div class="tab-bar">
+  <div class="tab-item">
+    <span class="tab-icon">📅</span>
+    <span>캘린더</span>
+  </div>
+  <div class="tab-item">
+    <span class="tab-icon">🍅</span>
+    <span>집중</span>
+  </div>
+  <div class="tab-item active">
+    <span class="tab-icon">☑️</span>
+    <span>할 일</span>
+  </div>
+  <div class="tab-item">
+    <span class="tab-icon">📊</span>
+    <span>관리</span>
+  </div>
+  <div class="tab-item">
+    <span class="tab-icon">⚙️</span>
+    <span>설정</span>
+  </div>
+</div>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.getElementById('themeBtn');
+  if (html.getAttribute('data-theme') === 'dark') {
+    html.removeAttribute('data-theme');
+    btn.textContent = '🌙';
+  } else {
+    html.setAttribute('data-theme', 'dark');
+    btn.textContent = '☀️';
+  }
+}
+
+// Toggle interaction
+document.querySelectorAll('.toggle').forEach(t => {
+  t.addEventListener('click', () => {
+    t.classList.toggle('on');
+    const label = t.nextElementSibling;
+    if (label) {
+      if (t.classList.contains('on')) {
+        label.textContent = '켜짐';
+        label.style.color = t.parentElement.querySelector('.toggle').classList.contains('p3') ? 'var(--error)' : 'var(--success)';
+      } else {
+        label.textContent = '꺼짐';
+        label.style.color = 'var(--text-muted)';
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>

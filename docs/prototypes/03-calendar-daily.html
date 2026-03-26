@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>로아 캘린더 — 일간 뷰</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<style>
+  :root {
+    --primary: #2563EB;
+    --accent: #F97316;
+    --bg: #FAFAF8;
+    --surface: #FFFFFF;
+    --text: #1C1C1A;
+    --text-secondary: #525250;
+    --text-muted: #A3A3A0;
+    --border: #E5E5E0;
+    --border-light: #F5F5F3;
+    --success: #22C55E;
+    --error: #EF4444;
+    --info: #3B82F6;
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-full: 9999px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --font: 'Pretendard Variable', -apple-system, system-ui, sans-serif;
+  }
+  [data-theme="dark"] {
+    --bg: #191F28; --surface: #242B35; --text: #F5F5F3;
+    --text-secondary: #A3A3A0; --text-muted: #737370;
+    --border: #333B48; --border-light: #2A3140;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--font); background: var(--bg); color: var(--text);
+    width: 375px; margin: 0 auto; min-height: 812px;
+    display: flex; flex-direction: column;
+    transition: background 0.2s, color 0.2s;
+    overflow: hidden;
+  }
+  .theme-toggle {
+    position: fixed; top: 8px; right: 8px; z-index: 200;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--border);
+    font-size: 14px; cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Status Bar */
+  .status-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 24px 4px; font-size: 12px; font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  /* Header */
+  .header {
+    padding: 4px 16px 8px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-shrink: 0;
+  }
+  .header-left { display: flex; flex-direction: column; gap: 1px; }
+  .day-title { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+  .day-subtitle { font-size: 13px; font-weight: 500; color: var(--text-secondary); }
+  .header-actions { display: flex; gap: 8px; align-items: center; }
+  .header-btn {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--border-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; cursor: pointer;
+  }
+  .today-btn {
+    padding: 5px 12px; border-radius: var(--radius-full);
+    background: var(--primary); color: white;
+    font-size: 12px; font-weight: 600; border: none; cursor: pointer;
+  }
+
+  /* View Switcher */
+  .view-switcher {
+    display: flex; gap: 4px; padding: 0 16px 8px;
+    flex-shrink: 0;
+  }
+  .view-tab {
+    padding: 5px 12px; border-radius: var(--radius-full);
+    font-size: 13px; font-weight: 600; border: none; cursor: pointer;
+    background: transparent; color: var(--text-muted);
+    transition: all 0.2s;
+  }
+  .view-tab.active { background: var(--primary); color: white; }
+
+  /* Day nav strip */
+  .day-nav {
+    display: flex; align-items: center; padding: 0 8px 8px;
+    gap: 4px; flex-shrink: 0;
+  }
+  .day-nav-btn {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: transparent; border: 1px solid var(--border-light);
+    font-size: 14px; cursor: pointer; color: var(--text-muted);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .day-strip {
+    flex: 1; display: flex; gap: 2px; overflow-x: hidden;
+    justify-content: center;
+  }
+  .dstrip-cell {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 2px; cursor: pointer; padding: 2px 4px; border-radius: var(--radius-sm);
+    min-width: 34px;
+  }
+  .dstrip-label { font-size: 9px; font-weight: 600; color: var(--text-muted); }
+  .dstrip-label.sat { color: var(--info); }
+  .dstrip-label.sun { color: var(--error); }
+  .dstrip-num {
+    font-size: 14px; font-weight: 600; color: var(--text-secondary);
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .dstrip-cell.today .dstrip-num {
+    background: var(--primary); color: white; font-weight: 700;
+  }
+  .dstrip-dot {
+    width: 4px; height: 4px; border-radius: 50%;
+    background: var(--primary); margin: 0 auto;
+    opacity: 0;
+  }
+  .dstrip-cell.has-event .dstrip-dot { opacity: 1; }
+
+  /* Divider */
+  .section-divider { height: 1px; background: var(--border-light); flex-shrink: 0; }
+
+  /* All-day strip */
+  .allday-strip {
+    display: flex; flex-shrink: 0;
+    border-bottom: 1px solid var(--border);
+    min-height: 32px; align-items: stretch;
+  }
+  .allday-label-col {
+    width: 52px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: flex-end;
+    padding-right: 8px;
+    font-size: 9px; color: var(--text-muted); font-weight: 600;
+  }
+  .allday-events-col {
+    flex: 1; display: flex; flex-direction: column;
+    gap: 3px; padding: 4px 8px 4px 0;
+  }
+  .allday-event-pill {
+    height: 20px; border-radius: 4px;
+    font-size: 10px; font-weight: 600; color: white;
+    padding: 0 8px; display: flex; align-items: center;
+    align-self: stretch;
+  }
+
+  /* Time Grid */
+  .time-grid-wrapper {
+    flex: 1; overflow-y: scroll; position: relative;
+    -webkit-overflow-scrolling: touch;
+  }
+  .time-grid {
+    display: flex; position: relative;
+    /* 24 hours * 72px per hour */
+    height: 1728px;
+  }
+  .time-labels {
+    width: 52px; flex-shrink: 0;
+  }
+  .time-label {
+    height: 72px; display: flex; align-items: flex-start;
+    justify-content: flex-end; padding-right: 8px; padding-top: 4px;
+    font-size: 10px; font-weight: 600; color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .time-label:first-child { visibility: hidden; }
+
+  /* Events column */
+  .events-col {
+    flex: 1; position: relative;
+    border-left: 1px solid var(--border-light);
+    padding-right: 8px;
+  }
+
+  /* Hour lines */
+  .hour-line {
+    position: absolute; left: 0; right: 0;
+    border-top: 1px solid var(--border-light);
+    pointer-events: none;
+  }
+  .hour-line.half {
+    border-top: 1px dashed var(--border-light);
+    opacity: 0.45;
+  }
+
+  /* Current time line */
+  .now-line {
+    position: absolute; left: -1px; right: 0;
+    height: 2px; background: var(--error); z-index: 10;
+    pointer-events: none;
+  }
+  .now-line::before {
+    content: '';
+    position: absolute; left: -4px; top: 50%;
+    transform: translateY(-50%);
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--error);
+  }
+  .now-time-label {
+    position: absolute; right: 4px; top: -8px;
+    font-size: 9px; font-weight: 700; color: var(--error);
+    pointer-events: none;
+  }
+
+  /* Event block */
+  .evt {
+    position: absolute; border-radius: var(--radius-sm);
+    padding: 6px 8px; overflow: hidden; cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .evt:active { transform: scale(0.98); box-shadow: var(--shadow-md); }
+  .evt-header {
+    display: flex; align-items: center; gap: 4px; margin-bottom: 2px;
+  }
+  .evt-color-dot {
+    width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+  }
+  .evt-title {
+    font-size: 12px; font-weight: 700;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .evt-meta {
+    font-size: 10px; font-weight: 500; margin-top: 2px; display: flex; flex-direction: column; gap: 1px;
+  }
+  .evt-time-range { opacity: 0.75; }
+  .evt-location {
+    display: flex; align-items: center; gap: 3px; opacity: 0.75;
+  }
+
+  /* Task block in grid */
+  .task-block {
+    position: absolute; left: 4px; right: 8px;
+    height: 36px; border-radius: var(--radius-sm);
+    background: var(--surface); border: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+    padding: 0 8px; cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.15s;
+  }
+  .task-block:active { transform: scale(0.98); }
+  .task-check {
+    width: 18px; height: 18px; min-width: 18px;
+    border: 2px solid var(--border); border-radius: 50%;
+  }
+  .task-check.done { background: var(--success); border-color: var(--success); }
+  .task-name {
+    font-size: 12px; font-weight: 500; flex: 1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .task-due-tag {
+    font-size: 9px; font-weight: 700; color: var(--error);
+    padding: 1px 5px; border-radius: var(--radius-full);
+    background: rgba(239,68,68,0.1);
+    white-space: nowrap;
+  }
+
+  /* FAB */
+  .fab {
+    position: fixed; bottom: 72px; right: calc((100vw - 375px)/2 + 20px);
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--primary); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: 300; border: none;
+    box-shadow: var(--shadow-md); cursor: pointer;
+    transition: transform 0.2s; z-index: 50;
+  }
+  .fab:active { transform: scale(0.92); }
+
+  /* Tab Bar */
+  .tab-bar {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 375px;
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 6px 0 20px;
+    background: var(--surface);
+    border-top: 1px solid var(--border-light);
+    z-index: 100;
+  }
+  .tab-item {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    font-size: 10px; font-weight: 500; color: var(--text-muted);
+    cursor: pointer; padding: 4px 8px;
+    transition: color 0.2s; position: relative;
+  }
+  .tab-item.active { color: var(--primary); }
+  .tab-icon { font-size: 22px; }
+  .tab-badge {
+    position: absolute; top: 2px; right: 4px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--error);
+  }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+
+<!-- Status Bar -->
+<div class="status-bar">
+  <span>9:41</span>
+  <span style="font-size:10px;">●●●&nbsp;&nbsp;📶&nbsp;&nbsp;🔋</span>
+</div>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-left">
+    <span class="day-title">3월 26일 수요일</span>
+    <span class="day-subtitle">오늘 · 일정 4개 · 할 일 2개</span>
+  </div>
+  <div class="header-actions">
+    <button class="today-btn">오늘</button>
+    <button class="header-btn">🔍</button>
+  </div>
+</div>
+
+<!-- View Switcher -->
+<div class="view-switcher">
+  <button class="view-tab">연간</button>
+  <button class="view-tab">월간</button>
+  <button class="view-tab">주간</button>
+  <button class="view-tab active">일간</button>
+</div>
+
+<!-- Day nav strip -->
+<div class="day-nav">
+  <button class="day-nav-btn">‹</button>
+  <div class="day-strip">
+    <div class="dstrip-cell has-event">
+      <span class="dstrip-label">월</span>
+      <span class="dstrip-num">23</span>
+      <div class="dstrip-dot"></div>
+    </div>
+    <div class="dstrip-cell has-event">
+      <span class="dstrip-label">화</span>
+      <span class="dstrip-num">24</span>
+      <div class="dstrip-dot"></div>
+    </div>
+    <div class="dstrip-cell">
+      <span class="dstrip-label">수</span>
+      <span class="dstrip-num">25</span>
+      <div class="dstrip-dot"></div>
+    </div>
+    <div class="dstrip-cell today has-event">
+      <span class="dstrip-label" style="color:var(--primary)">수</span>
+      <span class="dstrip-num">26</span>
+      <div class="dstrip-dot" style="background:white;"></div>
+    </div>
+    <div class="dstrip-cell">
+      <span class="dstrip-label">목</span>
+      <span class="dstrip-num">27</span>
+      <div class="dstrip-dot"></div>
+    </div>
+    <div class="dstrip-cell has-event">
+      <span class="dstrip-label">금</span>
+      <span class="dstrip-num">28</span>
+      <div class="dstrip-dot"></div>
+    </div>
+    <div class="dstrip-cell">
+      <span class="dstrip-label sat">토</span>
+      <span class="dstrip-num" style="color:var(--info)">29</span>
+      <div class="dstrip-dot"></div>
+    </div>
+  </div>
+  <button class="day-nav-btn">›</button>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- All-day strip -->
+<div class="allday-strip">
+  <div class="allday-label-col">종일</div>
+  <div class="allday-events-col">
+    <div class="allday-event-pill" style="background: var(--accent);">마케팅 캠페인 기간</div>
+  </div>
+</div>
+
+<!-- Time Grid -->
+<div class="time-grid-wrapper" id="gridWrapper">
+  <div class="time-grid">
+    <!-- Time labels: 0~23 + padding -->
+    <div class="time-labels">
+      <div class="time-label">0시</div>
+      <div class="time-label">1시</div>
+      <div class="time-label">2시</div>
+      <div class="time-label">3시</div>
+      <div class="time-label">4시</div>
+      <div class="time-label">5시</div>
+      <div class="time-label">6시</div>
+      <div class="time-label">7시</div>
+      <div class="time-label">8시</div>
+      <div class="time-label">9시</div>
+      <div class="time-label">10시</div>
+      <div class="time-label">11시</div>
+      <div class="time-label">12시</div>
+      <div class="time-label">13시</div>
+      <div class="time-label">14시</div>
+      <div class="time-label">15시</div>
+      <div class="time-label">16시</div>
+      <div class="time-label">17시</div>
+      <div class="time-label">18시</div>
+      <div class="time-label">19시</div>
+      <div class="time-label">20시</div>
+      <div class="time-label">21시</div>
+      <div class="time-label">22시</div>
+      <div class="time-label">23시</div>
+    </div>
+
+    <!-- Events column -->
+    <div class="events-col" id="eventsCol">
+
+      <!-- Hour lines: 72px per hour -->
+      <!-- 0~23 = 24 lines -->
+      <div class="hour-line" style="top:0;"></div>
+      <div class="hour-line half" style="top:36px;"></div>
+      <div class="hour-line" style="top:72px;"></div>
+      <div class="hour-line half" style="top:108px;"></div>
+      <div class="hour-line" style="top:144px;"></div>
+      <div class="hour-line half" style="top:180px;"></div>
+      <div class="hour-line" style="top:216px;"></div>
+      <div class="hour-line half" style="top:252px;"></div>
+      <div class="hour-line" style="top:288px;"></div>
+      <div class="hour-line half" style="top:324px;"></div>
+      <div class="hour-line" style="top:360px;"></div>
+      <div class="hour-line half" style="top:396px;"></div>
+      <div class="hour-line" style="top:432px;"></div>
+      <div class="hour-line half" style="top:468px;"></div>
+      <div class="hour-line" style="top:504px;"></div>
+      <div class="hour-line half" style="top:540px;"></div>
+      <div class="hour-line" style="top:576px;"></div>
+      <div class="hour-line half" style="top:612px;"></div>
+      <div class="hour-line" style="top:648px;"></div>
+      <div class="hour-line half" style="top:684px;"></div>
+      <div class="hour-line" style="top:720px;"></div>
+      <div class="hour-line half" style="top:756px;"></div>
+      <div class="hour-line" style="top:792px;"></div>
+      <div class="hour-line half" style="top:828px;"></div>
+      <div class="hour-line" style="top:864px;"></div>
+      <div class="hour-line half" style="top:900px;"></div>
+      <div class="hour-line" style="top:936px;"></div>
+      <div class="hour-line half" style="top:972px;"></div>
+      <div class="hour-line" style="top:1008px;"></div>
+      <div class="hour-line half" style="top:1044px;"></div>
+      <div class="hour-line" style="top:1080px;"></div>
+      <div class="hour-line half" style="top:1116px;"></div>
+      <div class="hour-line" style="top:1152px;"></div>
+      <div class="hour-line half" style="top:1188px;"></div>
+      <div class="hour-line" style="top:1224px;"></div>
+      <div class="hour-line half" style="top:1260px;"></div>
+      <div class="hour-line" style="top:1296px;"></div>
+      <div class="hour-line half" style="top:1332px;"></div>
+      <div class="hour-line" style="top:1368px;"></div>
+      <div class="hour-line half" style="top:1404px;"></div>
+      <div class="hour-line" style="top:1440px;"></div>
+      <div class="hour-line half" style="top:1476px;"></div>
+      <div class="hour-line" style="top:1512px;"></div>
+      <div class="hour-line half" style="top:1548px;"></div>
+      <div class="hour-line" style="top:1584px;"></div>
+      <div class="hour-line half" style="top:1620px;"></div>
+      <div class="hour-line" style="top:1656px;"></div>
+      <div class="hour-line half" style="top:1692px;"></div>
+
+      <!--
+        Events: 72px = 1 hour
+        9:30 스탠드업 30m → top=9.5*72=684, height=36
+        10:00 팀 주간 미팅 1h → top=720, height=72
+        12:00 점심 1h → top=864, height=72
+        14:00 기획안 작성 2h → top=1008, height=144
+        16:30 주간 보고서 작성 (task) → top=1188, height=36
+        18:00 운동 30m → top=1296, height=36
+        20:00 이메일 정리 (task done) → top=1440, height=36
+      -->
+
+      <!-- 9:30 스탠드업 -->
+      <div class="evt" style="background:rgba(37,99,235,0.12);border-left:3px solid var(--primary);left:4px;right:0;top:684px;height:36px;">
+        <div class="evt-header">
+          <div class="evt-color-dot" style="background:var(--primary);"></div>
+          <span class="evt-title" style="color:var(--primary);">팀 스탠드업</span>
+        </div>
+        <div class="evt-meta" style="color:var(--primary);">
+          <span class="evt-time-range">9:30 – 10:00 · 30분</span>
+        </div>
+      </div>
+
+      <!-- 10:00 팀 주간 미팅 1h -->
+      <div class="evt" style="background:var(--primary);left:4px;right:0;top:720px;height:68px;">
+        <div class="evt-header">
+          <span class="evt-title" style="color:white;">팀 주간 미팅</span>
+        </div>
+        <div class="evt-meta" style="color:white;">
+          <span class="evt-time-range">10:00 – 11:00 · 1시간</span>
+          <span class="evt-location">📍 회의실 A, 4층</span>
+        </div>
+      </div>
+
+      <!-- 12:00 점심 -->
+      <div class="evt" style="background:rgba(34,197,94,0.12);border-left:3px solid var(--success);left:4px;right:0;top:864px;height:68px;">
+        <div class="evt-header">
+          <div class="evt-color-dot" style="background:var(--success);"></div>
+          <span class="evt-title" style="color:var(--success);">점심 식사</span>
+        </div>
+        <div class="evt-meta" style="color:var(--success);">
+          <span class="evt-time-range">12:00 – 13:00 · 1시간</span>
+          <span class="evt-location">🍱 팀원들과 함께</span>
+        </div>
+      </div>
+
+      <!-- Task: 주간 보고서 제출 ~13:00 -->
+      <div class="task-block" style="top:936px;">
+        <div class="task-check"></div>
+        <span class="task-name">주간 보고서 제출</span>
+        <span class="task-due-tag">오늘 마감</span>
+      </div>
+
+      <!-- 14:00 기획안 작성 뽀모도로 2h -->
+      <div class="evt" style="background:var(--accent);left:4px;right:0;top:1008px;height:140px;">
+        <div class="evt-header">
+          <span class="evt-title" style="color:white;">🍅 기획안 작성</span>
+        </div>
+        <div class="evt-meta" style="color:white;">
+          <span class="evt-time-range">14:00 – 16:00 · 2시간</span>
+          <span class="evt-location">뽀모도로 3세션 예정</span>
+          <span style="margin-top:4px;font-size:10px;opacity:0.9;">현재 진행 중 🔴</span>
+        </div>
+      </div>
+
+      <!-- Current time: 14:18 → 14*72 + 18/60*72 = 1008 + 21.6 = ~1030 -->
+      <div class="now-line" style="top:1030px;">
+        <div class="now-time-label">14:18</div>
+      </div>
+
+      <!-- Task: 이메일 정리 (done) ~17:00 -->
+      <div class="task-block" style="top:1224px;">
+        <div class="task-check done"></div>
+        <span class="task-name" style="text-decoration:line-through;color:var(--text-muted);">이메일 정리</span>
+        <span style="font-size:9px;color:var(--success);font-weight:700;">완료</span>
+      </div>
+
+      <!-- 18:00 운동 30m -->
+      <div class="evt" style="background:rgba(34,197,94,0.15);border-left:3px solid var(--success);left:4px;right:0;top:1296px;height:36px;">
+        <div class="evt-header">
+          <div class="evt-color-dot" style="background:var(--success);"></div>
+          <span class="evt-title" style="color:var(--success);">운동 💪</span>
+        </div>
+        <div class="evt-meta" style="color:var(--success);">
+          <span class="evt-time-range">18:00 – 18:30 · 30분</span>
+        </div>
+      </div>
+
+      <!-- 20:00 독서 1h -->
+      <div class="evt" style="background:rgba(139,92,246,0.12);border-left:3px solid #8B5CF6;left:4px;right:0;top:1440px;height:68px;">
+        <div class="evt-header">
+          <div class="evt-color-dot" style="background:#8B5CF6;"></div>
+          <span class="evt-title" style="color:#8B5CF6;">독서 📚</span>
+        </div>
+        <div class="evt-meta" style="color:#8B5CF6;">
+          <span class="evt-time-range">20:00 – 21:00 · 1시간</span>
+          <span class="evt-location">개인 성장</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FAB -->
+<button class="fab">+</button>
+
+<!-- Tab Bar -->
+<div class="tab-bar">
+  <div class="tab-item active">
+    <span class="tab-icon">📅</span>
+    <span>캘린더</span>
+  </div>
+  <div class="tab-item">
+    <span class="tab-icon">🍅</span>
+    <span>집중</span>
+  </div>
+  <div class="tab-item">
+    <span class="tab-icon">☑️</span>
+    <span>할 일</span>
+    <span class="tab-badge"></span>
+  </div>
+  <div class="tab-item">
+    <span class="tab-icon">📊</span>
+    <span>관리</span>
+  </div>
+  <div class="tab-item">
+    <span class="tab-icon">⚙️</span>
+    <span>설정</span>
+  </div>
+</div>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.getElementById('themeBtn');
+  if (html.getAttribute('data-theme') === 'dark') {
+    html.removeAttribute('data-theme');
+    btn.textContent = '🌙';
+  } else {
+    html.setAttribute('data-theme', 'dark');
+    btn.textContent = '☀️';
+  }
+}
+
+// Scroll to 8am: 8 * 72 = 576px
+window.addEventListener('load', () => {
+  const wrapper = document.getElementById('gridWrapper');
+  wrapper.scrollTop = 576;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>로아 캘린더 — 뽀모도로 타이머</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<style>
+  :root {
+    --primary: #2563EB;
+    --accent: #F97316;
+    --bg: #FAFAF8;
+    --surface: #FFFFFF;
+    --text: #1C1C1A;
+    --text-secondary: #525250;
+    --text-muted: #A3A3A0;
+    --border: #E5E5E0;
+    --border-light: #F5F5F3;
+    --success: #22C55E;
+    --error: #EF4444;
+    --info: #3B82F6;
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-full: 9999px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --font: 'Pretendard Variable', -apple-system, system-ui, sans-serif;
+  }
+  [data-theme="dark"] {
+    --bg: #191F28; --surface: #242B35; --text: #F5F5F3;
+    --text-secondary: #A3A3A0; --text-muted: #737370;
+    --border: #333B48; --border-light: #2A3140;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--font); background: var(--bg); color: var(--text);
+    width: 375px; margin: 0 auto; min-height: 812px;
+    display: flex; flex-direction: column;
+    transition: background 0.2s, color 0.2s;
+    overflow-x: hidden;
+  }
+  .theme-toggle {
+    position: fixed; top: 8px; right: 8px; z-index: 200;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--border);
+    font-size: 14px; cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Status Bar */
+  .status-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 24px 4px; font-size: 12px; font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  /* Header */
+  .header {
+    padding: 4px 16px 0;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-shrink: 0;
+  }
+  .header-title { font-size: 18px; font-weight: 800; letter-spacing: -0.4px; }
+  .header-actions { display: flex; gap: 8px; }
+  .header-btn {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--border-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; cursor: pointer;
+  }
+
+  /* Main content */
+  .main {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; padding: 8px 24px 0;
+  }
+
+  /* Preset + ambient chips row */
+  .chips-row {
+    display: flex; gap: 8px; width: 100%; justify-content: center;
+    margin-bottom: 20px; flex-wrap: wrap;
+  }
+  .chip {
+    display: flex; align-items: center; gap: 5px;
+    padding: 7px 14px; border-radius: var(--radius-full);
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    border: 1.5px solid var(--border);
+    background: var(--surface); color: var(--text-secondary);
+    transition: all 0.15s;
+  }
+  .chip.active {
+    background: rgba(249,115,22,0.1);
+    border-color: var(--accent); color: var(--accent);
+  }
+  .chip:active { transform: scale(0.95); }
+
+  /* Timer ring container */
+  .timer-container {
+    position: relative; width: 240px; height: 240px;
+    margin-bottom: 24px; flex-shrink: 0;
+  }
+  .timer-svg {
+    width: 240px; height: 240px;
+    transform: rotate(-90deg);
+  }
+  .timer-bg-circle {
+    fill: none; stroke: var(--border-light);
+    stroke-width: 10;
+  }
+  .timer-progress-circle {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 10;
+    stroke-linecap: round;
+    /* circumference = 2 * π * 104 ≈ 653.5 */
+    stroke-dasharray: 653.5;
+    /* 65% complete → dashoffset = 653.5 * (1 - 0.65) = 228.7 */
+    stroke-dashoffset: 228.7;
+    transition: stroke-dashoffset 0.5s ease;
+  }
+  /* Inner glow */
+  .timer-inner-glow {
+    position: absolute; inset: 12px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(249,115,22,0.05) 0%, transparent 70%);
+  }
+  /* Timer info center */
+  .timer-center {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 2px;
+  }
+  .timer-status-label {
+    font-size: 12px; font-weight: 700;
+    color: var(--accent); letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .timer-countdown {
+    font-size: 52px; font-weight: 800; letter-spacing: -2px;
+    font-variant-numeric: tabular-nums;
+    font-family: -apple-system, 'Pretendard Variable', system-ui, sans-serif;
+    color: var(--text); line-height: 1;
+  }
+  .timer-session-label {
+    font-size: 12px; font-weight: 600; color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* Session dots */
+  .session-dots {
+    display: flex; gap: 10px; margin-bottom: 20px;
+  }
+  .session-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--border); transition: background 0.2s;
+  }
+  .session-dot.filled { background: var(--accent); }
+  .session-dot.current {
+    background: var(--accent); opacity: 0.5;
+    box-shadow: 0 0 0 3px rgba(249,115,22,0.2);
+  }
+
+  /* Selected task chip */
+  .task-chip {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 16px; background: var(--surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-light);
+    width: 100%; margin-bottom: 24px;
+    cursor: pointer; transition: transform 0.15s;
+  }
+  .task-chip:active { transform: scale(0.98); }
+  .task-chip-icon { font-size: 18px; flex-shrink: 0; }
+  .task-chip-text { flex: 1; }
+  .task-chip-title {
+    font-size: 14px; font-weight: 700; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .task-chip-sub {
+    font-size: 11px; font-weight: 500; color: var(--text-muted); margin-top: 1px;
+  }
+  .task-chip-change {
+    font-size: 11px; font-weight: 600; color: var(--primary);
+    background: rgba(37,99,235,0.08); padding: 3px 8px;
+    border-radius: var(--radius-full); white-space: nowrap;
+  }
+
+  /* Timer controls */
+  .controls {
+    display: flex; align-items: center; gap: 16px;
+    width: 100%; justify-content: center;
+    margin-bottom: 20px;
+  }
+  .ctrl-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    cursor: pointer; background: none; border: none;
+  }
+  .ctrl-btn-circle {
+    width: 52px; height: 52px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; transition: transform 0.15s;
+    box-shadow: var(--shadow-sm);
+  }
+  .ctrl-btn:active .ctrl-btn-circle { transform: scale(0.9); }
+  .ctrl-btn-label {
+    font-size: 10px; font-weight: 600; color: var(--text-muted);
+  }
+
+  .ctrl-btn.secondary .ctrl-btn-circle {
+    background: var(--surface); border: 1.5px solid var(--border);
+    color: var(--text-secondary);
+  }
+  .ctrl-btn.main .ctrl-btn-circle {
+    background: var(--accent); color: white;
+    width: 68px; height: 68px; font-size: 26px;
+    box-shadow: 0 6px 20px rgba(249,115,22,0.35);
+  }
+  .ctrl-btn.main .ctrl-btn-label {
+    font-size: 11px; font-weight: 700; color: var(--accent);
+  }
+  .ctrl-btn.danger .ctrl-btn-circle {
+    background: rgba(239,68,68,0.08);
+    border: 1.5px solid rgba(239,68,68,0.2);
+    color: var(--error);
+  }
+  .ctrl-btn.danger .ctrl-btn-label { color: var(--error); }
+
+  /* Stats row */
+  .stats-row {
+    display: flex; gap: 12px; width: 100%;
+    margin-bottom: 16px;
+  }
+  .stat-card {
+    flex: 1; background: var(--surface); border-radius: var(--radius-md);
+    padding: 12px; display: flex; flex-direction: column; gap: 2px;
+    box-shadow: var(--shadow-sm); border: 1px solid var(--border-light);
+  }
+  .stat-label { font-size: 10px; font-weight: 600; color: var(--text-muted); }
+  .stat-value { font-size: 18px; font-weight: 800; color: var(--text); letter-spacing: -0.5px; }
+  .stat-unit { font-size: 11px; font-weight: 500; color: var(--text-muted); margin-top: 1px; }
+
+  /* Bottom history hint */
+  .history-hint {
+    font-size: 11px; font-weight: 500; color: var(--text-muted);
+    text-align: center; margin-bottom: 8px;
+  }
+
+  /* Tab Bar */
+  .tab-bar {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 375px;
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 6px 0 20px;
+    background: var(--surface);
+    border-top: 1px solid var(--border-light);
+    z-index: 100;
+  }
+  .tab-item {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    font-size: 10px; font-weight: 500; color: var(--text-muted);
+    cursor: pointer; padding: 4px 8px;
+    transition: color 0.2s; position: relative;
+  }
+  .tab-item.active { color: var(--accent); }
+  .tab-icon { font-size: 22px; }
+  .tab-badge {
+    position: absolute; top: 2px; right: 4px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--error);
+  }
+
+  /* Bottom spacer */
+  .bottom-spacer { height: 72px; }
+
+  /* Ambient progress bar */
+  .ambient-bar {
+    width: 100%; height: 3px; background: var(--border-light);
+    border-radius: 2px; overflow: hidden; margin-bottom: 16px;
+  }
+  .ambient-bar-fill {
+    height: 100%; width: 65%;
+    background: linear-gradient(90deg, var(--accent), #FBBF24);
+    border-radius: 2px;
+  }
+
+  /* Breathing ring animation */
+  @keyframes breathe {
+    0%, 100% { opacity: 0.15; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(1.04); }
+  }
+  .timer-glow-ring {
+    position: absolute; inset: -8px;
+    border-radius: 50%;
+    border: 3px solid var(--accent);
+    opacity: 0.15;
+    animation: breathe 3s ease-in-out infinite;
+  }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+
+<!-- Status Bar -->
+<div class="status-bar">
+  <span>9:41</span>
+  <span style="font-size:10px;">●●●&nbsp;&nbsp;📶&nbsp;&nbsp;🔋</span>
+</div>
+
+<!-- Header -->
+<div class="header">
+  <span class="header-title">집중 타이머</span>
+  <div class="header-actions">
+    <button class="header-btn">📊</button>
+    <button class="header-btn">⚙️</button>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+  <!-- Preset + Ambient chips -->
+  <div class="chips-row" style="margin-top:12px;">
+    <div class="chip active">🍅 클래식 25/5</div>
+    <div class="chip">☁️ 빗소리</div>
+  </div>
+
+  <!-- Timer Ring -->
+  <div class="timer-container">
+    <!-- Breathing glow ring -->
+    <div class="timer-glow-ring"></div>
+    <!-- Inner glow -->
+    <div class="timer-inner-glow"></div>
+
+    <!-- SVG ring -->
+    <svg class="timer-svg" viewBox="0 0 240 240">
+      <defs>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      <!-- Background track -->
+      <circle class="timer-bg-circle" cx="120" cy="120" r="104"/>
+      <!-- Progress arc (65% = 228.7 offset) -->
+      <circle class="timer-progress-circle" cx="120" cy="120" r="104" filter="url(#glow)"/>
+    </svg>
+
+    <!-- Center content -->
+    <div class="timer-center">
+      <span class="timer-status-label">집중 중</span>
+      <span class="timer-countdown">16:42</span>
+      <span class="timer-session-label">세션 2 / 4</span>
+    </div>
+  </div>
+
+  <!-- Session progress dots -->
+  <div class="session-dots">
+    <div class="session-dot filled"></div>
+    <div class="session-dot current"></div>
+    <div class="session-dot"></div>
+    <div class="session-dot"></div>
+  </div>
+
+  <!-- Selected task chip -->
+  <div class="task-chip">
+    <span class="task-chip-icon">📝</span>
+    <div class="task-chip-text">
+      <div class="task-chip-title">기획안 작성</div>
+      <div class="task-chip-sub">오늘 마감 · 예상 3세션</div>
+    </div>
+    <span class="task-chip-change">변경</span>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <!-- Stop -->
+    <button class="ctrl-btn danger">
+      <div class="ctrl-btn-circle">■</div>
+      <span class="ctrl-btn-label">중단</span>
+    </button>
+
+    <!-- Pause (main) -->
+    <button class="ctrl-btn main">
+      <div class="ctrl-btn-circle">⏸</div>
+      <span class="ctrl-btn-label">일시정지</span>
+    </button>
+
+    <!-- Skip -->
+    <button class="ctrl-btn secondary">
+      <div class="ctrl-btn-circle">⏭</div>
+      <span class="ctrl-btn-label">건너뛰기</span>
+    </button>
+  </div>
+
+  <!-- Ambient sound progress -->
+  <div style="width:100%;margin-bottom:8px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+      <span style="font-size:11px;font-weight:600;color:var(--text-muted);">☁️ 빗소리 재생 중</span>
+      <span style="font-size:11px;font-weight:600;color:var(--accent);">65%</span>
+    </div>
+    <div class="ambient-bar">
+      <div class="ambient-bar-fill"></div>
+    </div>
+  </div>
+
+  <!-- Stats row -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <span class="stat-label">오늘 집중</span>
+      <span class="stat-value">1<span style="font-size:12px;font-weight:600;">h</span> 23<span style="font-size:12px;font-weight:600;">m</span></span>
+      <span class="stat-unit">목표 2시간</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">이번 주</span>
+      <span class="stat-value">8<span style="font-size:12px;font-weight:600;">세션</span></span>
+      <span class="stat-unit">총 200분</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">연속 집중</span>
+      <span class="stat-value" style="color:var(--accent);">4<span style="font-size:12px;font-weight:600;">일</span></span>
+      <span class="stat-unit">🔥 최고 기록</span>
+    </div>
+  </div>
+
+  <!-- History hint -->
+  <div class="history-hint">↑ 스와이프하여 집중 기록 보기</div>
+
+</div>
+
+<div class="bottom-spacer"></div>
+
+<!-- Tab Bar -->
+<div class="tab-bar">
+  <div class="tab-item">
+    <span class="tab-icon">📅</span>
+    <span>캘린더</span>
+  </div>
+  <div class="tab-item active">
+    <span class="tab-icon">🍅</span>
+    <span>집중</span>
+  </div>
+  <div class="tab-item">
+    <span class="tab-icon">☑️</span>
+    <span>할 일</span>
+    <span class="tab-badge"></span>
+  </div>
+  <div class="tab-item">
+    <span class="tab-icon">📊</span>
+    <span>관리</span>
+  </div>
+  <div class="tab-item">
+    <span class="tab-icon">⚙️</span>
+    <span>설정</span>
+  </div>
+</div>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.getElementById('themeBtn');
+  if (html.getAttribute('data-theme') === 'dark') {
+    html.removeAttribute('data-theme');
+    btn.textContent = '🌙';
+  } else {
+    html.setAttribute('data-theme', 'dark');
+    btn.textContent = '☀️';
+  }
+}
+
+// Animate countdown
+let seconds = 16 * 60 + 42;
+const display = document.querySelector('.timer-countdown');
+const progressCircle = document.querySelector('.timer-progress-circle');
+const TOTAL = 25 * 60;
+const CIRCUMFERENCE = 2 * Math.PI * 104; // ≈ 653.5
+
+function updateTimer() {
+  if (seconds <= 0) return;
+  seconds--;
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  display.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  // progress = (TOTAL - seconds) / TOTAL * CIRCUMFERENCE
+  const elapsed = TOTAL - seconds;
+  const progress = elapsed / TOTAL;
+  const offset = CIRCUMFERENCE * (1 - progress);
+  progressCircle.style.strokeDashoffset = offset.toFixed(1);
+}
+
+setInterval(updateTimer, 1000);
+</script>
+</body>
+</html>
