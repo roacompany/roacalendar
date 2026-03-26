@@ -3,7 +3,10 @@ import SwiftUI
 // MARK: - Todo Today 뷰
 
 struct TodoTodayView: View {
+    @Environment(\.modelContext) private var modelContext
     @State private var viewModel = TodoTodayViewModel()
+    @State private var quickAddText = ""
+    @State private var showQuickAdd = false
 
     var body: some View {
         NavigationStack {
@@ -91,24 +94,54 @@ struct TodoTodayView: View {
     private var todoList: some View {
         ScrollView {
             VStack(spacing: Spacing.sm) {
-                TodoItemView(title: "기획안 최종 제출", priority: .high, isDone: false, dueLabel: "오늘 마감", tag: "업무", pomodoroText: "🍅 3/3", streakText: nil)
-                TodoItemView(title: "주간 보고서 작성", priority: .medium, isDone: false, dueLabel: "내일 마감", tag: "업무", pomodoroText: "🍅 0/2", streakText: nil)
-                TodoItemView(title: "이메일 정리", priority: .low, isDone: true, dueLabel: nil, tag: "업무", pomodoroText: nil, streakText: nil)
-                TodoItemView(title: "운동 30분", priority: .high, isDone: false, dueLabel: nil, tag: "건강", pomodoroText: nil, streakText: "🔥 12일")
-                TodoItemView(title: "독서 20분", priority: .medium, isDone: true, dueLabel: nil, tag: "학습", pomodoroText: nil, streakText: nil)
-                TodoItemView(title: "팀 회의 준비", priority: .medium, isDone: false, dueLabel: nil, tag: "업무", pomodoroText: nil, streakText: nil)
-                TodoItemView(title: "장보기", priority: .none, isDone: false, dueLabel: nil, tag: "개인", pomodoroText: nil, streakText: nil)
-                TodoItemView(title: "명상 10분", priority: .low, isDone: false, dueLabel: nil, tag: "건강", pomodoroText: nil, streakText: nil)
+                if viewModel.tasks.isEmpty {
+                    VStack(spacing: Spacing.md) {
+                        Text("☑️")
+                            .font(.system(size: 48))
+                        Text("할 일이 없습니다")
+                            .font(.roaBody)
+                            .foregroundStyle(Color.neutral400)
+                        Text("+ 버튼으로 할 일을 추가하세요")
+                            .font(.roaCaption)
+                            .foregroundStyle(Color.neutral400)
+                    }
+                    .padding(.top, Spacing.xxxl)
+                } else {
+                    ForEach(viewModel.tasks, id: \.id) { task in
+                        TodoItemView(
+                            title: task.title,
+                            priority: task.priority,
+                            isDone: task.status == .completed,
+                            dueLabel: task.isOverdue ? "기한 초과" : nil,
+                            tag: task.calendar?.title,
+                            pomodoroText: task.estimatedPomodoros.map { "🍅 \(task.completedPomodoros)/\($0)" },
+                            streakText: nil,
+                            onToggle: {
+                                withAnimation(.spring(duration: 0.2)) {
+                                    viewModel.toggleComplete(task, context: modelContext)
+                                }
+                            }
+                        )
+                    }
+                }
             }
             .padding(.horizontal, Spacing.md)
             .padding(.bottom, 80)
+        }
+        .onAppear {
+            viewModel.loadTasks(context: modelContext)
+        }
+        .onChange(of: viewModel.selectedView) {
+            viewModel.loadTasks(context: modelContext)
         }
     }
 
     // MARK: - FAB
 
     private var fab: some View {
-        Button {} label: {
+        Button {
+            showQuickAdd = true
+        } label: {
             Image(systemName: "plus")
                 .font(.system(size: 24, weight: .medium))
                 .foregroundStyle(.white)
@@ -119,6 +152,14 @@ struct TodoTodayView: View {
         }
         .padding(.trailing, Spacing.lg)
         .padding(.bottom, Spacing.lg)
+        .alert("할 일 추가", isPresented: $showQuickAdd) {
+            TextField("무엇을 해야 하나요?", text: $quickAddText)
+            Button("추가") {
+                viewModel.quickAdd(title: quickAddText, context: modelContext)
+                quickAddText = ""
+            }
+            Button("취소", role: .cancel) { quickAddText = "" }
+        }
     }
 }
 

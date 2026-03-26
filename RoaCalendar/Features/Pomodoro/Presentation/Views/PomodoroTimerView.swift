@@ -90,9 +90,12 @@ struct PomodoroTimerView: View {
             .clipShape(Circle())
 
             Button {
-                if viewModel.isRunning {
+                switch viewModel.state {
+                case .running, .overflow:
                     viewModel.pause()
-                } else {
+                case .paused:
+                    viewModel.resume()
+                default:
                     viewModel.start()
                 }
             } label: {

@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 import Observation
 
 // MARK: - Todo Today ViewModel
@@ -19,9 +20,55 @@ final class TodoTodayViewModel {
     }
 
     var selectedView: SmartView = .today
-    var taskCount: Int = 8
-    var estimatedHours: Double = 4.5
-    var freeHours: Double = 5.0
+    var tasks: [TaskModel] = []
+
+    // MARK: - 데이터 로드
+
+    func loadTasks(context: ModelContext) {
+        let service = TaskService(context: context)
+        switch selectedView {
+        case .inbox:
+            tasks = service.fetchInboxTasks()
+        case .today:
+            tasks = service.fetchTodayTasks()
+        case .anytime:
+            tasks = service.fetchActiveTasks()
+        default:
+            tasks = service.fetchActiveTasks()
+        }
+    }
+
+    // MARK: - Task 완료
+
+    func toggleComplete(_ task: TaskModel, context: ModelContext) {
+        let service = TaskService(context: context)
+        if task.status == .completed {
+            service.activateTask(task)
+        } else {
+            service.completeTask(task)
+        }
+        loadTasks(context: context)
+    }
+
+    // MARK: - Quick Add
+
+    func quickAdd(title: String, context: ModelContext) {
+        guard !title.isEmpty else { return }
+        let service = TaskService(context: context)
+        _ = service.createTask(title: title)
+        loadTasks(context: context)
+    }
+
+    // MARK: - 통계
+
+    var taskCount: Int { tasks.count }
+
+    var estimatedHours: Double {
+        let totalMinutes = tasks.compactMap(\.estimatedDuration).reduce(0, +)
+        return Double(totalMinutes) / 60.0
+    }
+
+    var freeHours: Double { 5.0 } // TODO: CalendarQueryService에서 계산
 
     var isOverloaded: Bool { estimatedHours > freeHours }
 
