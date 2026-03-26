@@ -1,0 +1,89 @@
+name: RoaCalendar
+options:
+  bundleIdPrefix: com.roacompany
+  deploymentTarget:
+    iOS: "18.0"
+  xcodeVersion: "16.0"
+  generateEmptyDirectories: true
+  groupSortPosition: top
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    DEVELOPMENT_TEAM: R24J6R4S7X
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    CODE_SIGN_STYLE: Manual
+    IPHONEOS_DEPLOYMENT_TARGET: "18.0"
+    TARGETED_DEVICE_FAMILY: "1"
+    INFOPLIST_KEY_UILaunchScreen_Generation: true
+    INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
+    INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.productivity"
+    INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: false
+    SWIFT_STRICT_CONCURRENCY: complete
+
+targets:
+  RoaCalendar:
+    type: application
+    platform: iOS
+    sources:
+      - path: RoaCalendar
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.roacompany.roacalendar
+        INFOPLIST_FILE: RoaCalendar/Resources/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    info:
+      path: RoaCalendar/Resources/Info.plist
+      properties:
+        UIBackgroundModes:
+          - audio
+        BGTaskSchedulerPermittedIdentifiers:
+          - com.roacompany.roacalendar.pomodoro
+        NSPhotoLibraryUsageDescription: "일정에 사진을 첨부하기 위해 사진 접근이 필요합니다."
+        CFBundleDisplayName: "로아 캘린더"
+    entitlements:
+      path: RoaCalendar/RoaCalendar.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.roacompany.roacalendar
+
+  RoaCalendarTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: RoaCalendarTests
+    dependencies:
+      - target: RoaCalendar
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.roacompany.roacalendar.tests
+
+  RoaCalendarWidget:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: RoaCalendarWidget
+    dependencies:
+      - target: RoaCalendar
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.roacompany.roacalendar.widget
+        INFOPLIST_FILE: RoaCalendarWidget/Info.plist
+    entitlements:
+      path: RoaCalendarWidget/RoaCalendarWidget.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.roacompany.roacalendar
+
+  RoaCalendarShare:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: RoaCalendarShare
+    dependencies:
+      - target: RoaCalendar
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.roacompany.roacalendar.share
+        INFOPLIST_FILE: RoaCalendarShare/Info.plist
