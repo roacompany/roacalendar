@@ -4,7 +4,9 @@ import SwiftData
 // MARK: - 캘린더 월간 뷰
 
 struct CalendarMonthView: View {
+    @Environment(\.modelContext) private var modelContext
     @State private var viewModel = CalendarMonthViewModel()
+    @State private var showCreateEvent = false
 
     var body: some View {
         NavigationStack {
@@ -16,6 +18,24 @@ struct CalendarMonthView: View {
                 dayDetail
             }
             .background(Color.bgLight)
+            .overlay(alignment: .bottomTrailing) {
+                Button {
+                    showCreateEvent = true
+                } label: {
+                    Image(systemName: "plus")
+                        .font(.system(size: 24, weight: .medium))
+                        .foregroundStyle(.white)
+                        .frame(width: 52, height: 52)
+                        .background(Color.primary600)
+                        .clipShape(Circle())
+                        .shadow(color: .primary600.opacity(0.3), radius: 8, y: 4)
+                }
+                .padding(.trailing, Spacing.lg)
+                .padding(.bottom, Spacing.lg)
+            }
+            .sheet(isPresented: $showCreateEvent) {
+                EventCreateView()
+            }
         }
     }
 
