@@ -1,0 +1,17 @@
+# Xcode
+.xcodeproj
+*.xcuserstate
+DerivedData/
+build/
+
+# macOS
+.DS_Store
+*.swp
+*~
+
+# Dependencies
+Pods/
+
+# IDE
+.idea/
+*.xcworkspace/xcuserdata/

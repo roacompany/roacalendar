@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>로아 캘린더 — Design System Preview</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<style>
+  :root {
+    --primary: #2563EB;
+    --primary-hover: #1D4ED8;
+    --accent: #F97316;
+    --accent-hover: #EA580C;
+    --bg: #FAFAF8;
+    --surface: #FFFFFF;
+    --text: #1C1C1A;
+    --text-secondary: #525250;
+    --text-muted: #A3A3A0;
+    --border: #E5E5E0;
+    --border-light: #F5F5F3;
+    --success: #22C55E;
+    --warning: #EAB308;
+    --error: #EF4444;
+    --info: #3B82F6;
+    --neutral-50: #FAFAF8;
+    --neutral-100: #F5F5F3;
+    --neutral-200: #E5E5E0;
+    --neutral-300: #D4D4CF;
+    --neutral-400: #A3A3A0;
+    --neutral-500: #737370;
+    --neutral-600: #525250;
+    --neutral-700: #404040;
+    --neutral-800: #262626;
+    --neutral-900: #1C1C1A;
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-full: 9999px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+    --font-kr: 'Pretendard Variable', 'Pretendard', -apple-system, system-ui, sans-serif;
+    --font-sys: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+    --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  [data-theme="dark"] {
+    --bg: #191F28;
+    --surface: #242B35;
+    --text: #F5F5F3;
+    --text-secondary: #A3A3A0;
+    --text-muted: #737370;
+    --border: #333B48;
+    --border-light: #2A3140;
+    --neutral-50: #191F28;
+    --neutral-100: #1E2530;
+    --neutral-200: #242B35;
+    --neutral-300: #333B48;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.4);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-kr);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    transition: background var(--transition), color var(--transition);
+  }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  /* Theme Toggle */
+  .theme-toggle {
+    position: fixed; top: 16px; right: 16px; z-index: 100;
+    width: 48px; height: 48px; border-radius: var(--radius-full);
+    background: var(--surface); border: 1px solid var(--border);
+    box-shadow: var(--shadow-md); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; transition: all var(--transition);
+  }
+  .theme-toggle:hover { box-shadow: var(--shadow-lg); transform: scale(1.05); }
+
+  /* Hero */
+  .hero {
+    padding: 80px 0 48px;
+    text-align: left;
+  }
+  .hero-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--primary);
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+  }
+  .hero h1 .accent { color: var(--accent); }
+  .hero p {
+    font-size: 18px;
+    color: var(--text-secondary);
+    max-width: 480px;
+  }
+
+  /* Section */
+  .section { padding: 48px 0; }
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--primary);
+    margin-bottom: 24px;
+  }
+  .section h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    letter-spacing: -0.5px;
+  }
+
+  /* Typography Specimen */
+  .type-specimen { display: flex; flex-direction: column; gap: 16px; }
+  .type-row {
+    display: flex; align-items: baseline; gap: 24px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .type-label {
+    min-width: 120px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .type-display { font-size: 34px; font-weight: 800; letter-spacing: -1px; }
+  .type-title1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+  .type-title2 { font-size: 22px; font-weight: 700; }
+  .type-headline { font-size: 17px; font-weight: 600; }
+  .type-body { font-size: 17px; font-weight: 400; line-height: 1.6; }
+  .type-caption { font-size: 12px; font-weight: 500; color: var(--text-secondary); }
+  .type-tabular { font-size: 17px; font-variant-numeric: tabular-nums; font-family: var(--font-sys); }
+
+  /* Color Palette */
+  .palette { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+  .swatch {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-light);
+  }
+  .swatch-color { height: 72px; }
+  .swatch-info { padding: 10px 12px; background: var(--surface); }
+  .swatch-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+  .swatch-hex { font-size: 11px; color: var(--text-muted); font-family: var(--font-sys); font-variant-numeric: tabular-nums; }
+
+  /* UI Components */
+  .components { display: flex; flex-direction: column; gap: 32px; }
+  .component-group { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .component-label {
+    width: 100%;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 10px 20px; border-radius: var(--radius-full);
+    font-family: var(--font-kr); font-size: 15px; font-weight: 600;
+    border: none; cursor: pointer; transition: all var(--transition);
+    gap: 6px;
+  }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+  .btn-accent { background: var(--accent); color: white; }
+  .btn-accent:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+  .btn-secondary { background: var(--neutral-100); color: var(--text); }
+  .btn-secondary:hover { background: var(--neutral-200); }
+  .btn-ghost { background: transparent; color: var(--primary); border: 1.5px solid var(--primary); }
+  .btn-ghost:hover { background: rgba(37,99,235,0.06); }
+  .btn-sm { padding: 6px 14px; font-size: 13px; }
+  .btn-lg { padding: 14px 28px; font-size: 17px; }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition);
+  }
+  .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .card-title { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+  .card-body { font-size: 15px; color: var(--text-secondary); line-height: 1.5; }
+
+  /* Form Elements */
+  .input {
+    width: 100%; max-width: 320px;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-md);
+    font-family: var(--font-kr);
+    font-size: 15px;
+    background: var(--surface);
+    color: var(--text);
+    outline: none;
+    transition: border-color var(--transition);
+  }
+  .input:focus { border-color: var(--primary); }
+  .input::placeholder { color: var(--text-muted); }
+
+  .input-label {
+    font-size: 13px; font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 6px; display: block;
+  }
+
+  /* Alerts */
+  .alerts { display: flex; flex-direction: column; gap: 12px; }
+  .alert {
+    padding: 14px 16px;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 500;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .alert-success { background: #F0FDF4; color: #166534; border-left: 3px solid var(--success); }
+  .alert-warning { background: #FEFCE8; color: #854D0E; border-left: 3px solid var(--warning); }
+  .alert-error { background: #FEF2F2; color: #991B1B; border-left: 3px solid var(--error); }
+  .alert-info { background: #EFF6FF; color: #1E40AF; border-left: 3px solid var(--info); }
+  [data-theme="dark"] .alert-success { background: rgba(34,197,94,0.1); color: #86EFAC; }
+  [data-theme="dark"] .alert-warning { background: rgba(234,179,8,0.1); color: #FDE047; }
+  [data-theme="dark"] .alert-error { background: rgba(239,68,68,0.1); color: #FCA5A5; }
+  [data-theme="dark"] .alert-info { background: rgba(59,130,246,0.1); color: #93C5FD; }
+
+  /* Chips/Tags */
+  .chip {
+    display: inline-flex; align-items: center;
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    font-size: 12px; font-weight: 600;
+    gap: 4px;
+  }
+  .chip-blue { background: rgba(37,99,235,0.1); color: var(--primary); }
+  .chip-orange { background: rgba(249,115,22,0.1); color: var(--accent); }
+  .chip-green { background: rgba(34,197,94,0.1); color: #16A34A; }
+  .chip-red { background: rgba(239,68,68,0.1); color: #DC2626; }
+  .chip-gray { background: var(--neutral-100); color: var(--text-secondary); }
+
+  /* Mockup: iPhone Frame */
+  .mockup-row { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 32px; }
+  @media (max-width: 720px) { .mockup-row { grid-template-columns: 1fr; } }
+
+  .phone-frame {
+    width: 100%; max-width: 375px; margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    padding: 16px;
+    box-shadow: var(--shadow-lg);
+  }
+  .phone-screen {
+    background: var(--bg);
+    border-radius: 28px;
+    overflow: hidden;
+    min-height: 600px;
+  }
+
+  /* Mockup: Status Bar */
+  .status-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 24px;
+    font-size: 12px; font-weight: 600;
+  }
+
+  /* Mockup: Tab Bar */
+  .tab-bar {
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 8px 0 4px;
+    border-top: 1px solid var(--border-light);
+    background: var(--surface);
+  }
+  .tab-item {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    font-size: 10px; font-weight: 500; color: var(--text-muted);
+  }
+  .tab-item.active { color: var(--primary); }
+  .tab-icon { font-size: 20px; }
+
+  /* Mockup: Calendar */
+  .mock-header {
+    padding: 16px 20px 8px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .mock-month { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+  .mock-today-btn {
+    padding: 4px 12px; border-radius: var(--radius-full);
+    background: var(--primary); color: white;
+    font-size: 12px; font-weight: 600; border: none;
+  }
+
+  .calendar-grid {
+    padding: 0 12px;
+  }
+  .cal-weekdays {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    text-align: center; font-size: 11px; font-weight: 600;
+    color: var(--text-muted); padding: 8px 0;
+  }
+  .cal-days {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    text-align: center; gap: 2px;
+  }
+  .cal-day {
+    aspect-ratio: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 500; border-radius: var(--radius-full);
+    position: relative;
+  }
+  .cal-day.today {
+    background: var(--primary); color: white; font-weight: 700;
+  }
+  .cal-day.has-event::after {
+    content: ''; position: absolute; bottom: 4px;
+    width: 4px; height: 4px; border-radius: 50%;
+    background: var(--accent);
+  }
+  .cal-day.weekend { color: var(--error); }
+  .cal-day.other-month { color: var(--text-muted); opacity: 0.4; }
+
+  /* Mockup: Event List */
+  .event-list { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .event-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px;
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--primary);
+  }
+  .event-item.orange { border-left-color: var(--accent); }
+  .event-item.green { border-left-color: var(--success); }
+  .event-time { font-size: 12px; font-weight: 600; color: var(--text-muted); min-width: 48px; font-variant-numeric: tabular-nums; }
+  .event-title { font-size: 14px; font-weight: 500; }
+
+  /* Mockup: Pomodoro */
+  .pomodoro-screen { display: flex; flex-direction: column; align-items: center; padding: 40px 20px 20px; }
+  .timer-ring {
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: conic-gradient(var(--accent) 0% 65%, var(--neutral-200) 65% 100%);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .timer-inner {
+    width: 192px; height: 192px;
+    border-radius: 50%;
+    background: var(--bg);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .timer-time {
+    font-size: 48px; font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    font-family: var(--font-sys);
+    letter-spacing: -2px;
+  }
+  .timer-label { font-size: 13px; font-weight: 600; color: var(--accent); margin-top: 4px; }
+  .timer-session { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  .pomo-task {
+    margin-top: 24px;
+    padding: 12px 20px;
+    background: var(--surface);
+    border-radius: var(--radius-full);
+    font-size: 14px; font-weight: 500;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-light);
+  }
+  .pomo-controls {
+    margin-top: 24px;
+    display: flex; gap: 12px;
+  }
+  .pomo-btn {
+    width: 56px; height: 56px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    border: none; cursor: pointer; font-size: 22px;
+    transition: all var(--transition);
+  }
+  .pomo-btn-main { background: var(--accent); color: white; width: 64px; height: 64px; font-size: 26px; box-shadow: var(--shadow-md); }
+  .pomo-btn-secondary { background: var(--neutral-100); color: var(--text-secondary); }
+
+  /* Mockup: Todo */
+  .todo-screen { padding: 16px; }
+  .todo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .todo-title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+  .todo-count {
+    padding: 2px 10px; border-radius: var(--radius-full);
+    background: var(--primary); color: white;
+    font-size: 12px; font-weight: 700;
+  }
+  .todo-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .todo-check {
+    width: 22px; height: 22px; min-width: 22px;
+    border: 2px solid var(--border); border-radius: 50%;
+    margin-top: 1px;
+  }
+  .todo-check.done { background: var(--success); border-color: var(--success); }
+  .todo-content { flex: 1; }
+  .todo-item-title { font-size: 15px; font-weight: 500; }
+  .todo-item-title.done { text-decoration: line-through; color: var(--text-muted); }
+  .todo-meta { display: flex; gap: 8px; margin-top: 4px; }
+  .todo-due { font-size: 11px; font-weight: 600; color: var(--error); }
+  .todo-tag { font-size: 11px; font-weight: 600; color: var(--primary); }
+  .todo-pomo { font-size: 11px; font-weight: 600; color: var(--accent); }
+  .todo-priority {
+    width: 6px; min-width: 6px; border-radius: 3px;
+    align-self: stretch;
+  }
+  .priority-high { background: var(--error); }
+  .priority-medium { background: var(--warning); }
+  .priority-low { background: var(--info); }
+
+  .fab {
+    position: absolute; bottom: 64px; right: 20px;
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--primary); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: 300;
+    box-shadow: var(--shadow-lg); border: none;
+  }
+
+  /* Spacing Scale */
+  .spacing-demo { display: flex; flex-direction: column; gap: 8px; }
+  .spacing-row { display: flex; align-items: center; gap: 16px; }
+  .spacing-bar { height: 24px; background: var(--primary); border-radius: 4px; opacity: 0.2; }
+  .spacing-label { font-size: 12px; font-weight: 600; color: var(--text-muted); min-width: 80px; font-variant-numeric: tabular-nums; }
+
+  /* Divider */
+  .divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+  .footer {
+    text-align: center; padding: 48px 0;
+    font-size: 13px; color: var(--text-muted);
+  }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+
+<div class="container">
+  <!-- Hero -->
+  <div class="hero">
+    <span class="hero-badge">DESIGN SYSTEM v1.0</span>
+    <h1>로아 <span class="accent">캘린더</span></h1>
+    <p>일정을 정리하세요 — 쿠팡급 품질의 자기관리 iOS 앱</p>
+  </div>
+
+  <!-- Typography -->
+  <div class="section">
+    <div class="section-title">Typography</div>
+    <h2>Pretendard + SF Pro</h2>
+    <div class="type-specimen">
+      <div class="type-row">
+        <span class="type-label">Display 34pt</span>
+        <span class="type-display">3월 일정 관리</span>
+      </div>
+      <div class="type-row">
+        <span class="type-label">Title 1 28pt</span>
+        <span class="type-title1">오늘의 집중 세션</span>
+      </div>
+      <div class="type-row">
+        <span class="type-label">Title 2 22pt</span>
+        <span class="type-title2">주간 리뷰 요약</span>
+      </div>
+      <div class="type-row">
+        <span class="type-label">Headline 17pt</span>
+        <span class="type-headline">뽀모도로 타이머 설정</span>
+      </div>
+      <div class="type-row">
+        <span class="type-label">Body 17pt</span>
+        <span class="type-body">매일 아침 계획을 세우고, 집중하고, 저녁에 돌아봅니다. 작은 습관이 큰 변화를 만듭니다.</span>
+      </div>
+      <div class="type-row">
+        <span class="type-label">Caption 12pt</span>
+        <span class="type-caption">오전 10:30 · 업무 캘린더 · 반복</span>
+      </div>
+      <div class="type-row">
+        <span class="type-label">Tabular Nums</span>
+        <span class="type-tabular">16:42 · 3/4 세션 · 78%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Color Palette -->
+  <div class="section">
+    <div class="section-title">Color Palette</div>
+    <h2>Confident Blue + Warm Orange</h2>
+    <div class="palette">
+      <div class="swatch"><div class="swatch-color" style="background:#2563EB"></div><div class="swatch-info"><div class="swatch-name">Primary</div><div class="swatch-hex">#2563EB</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#1D4ED8"></div><div class="swatch-info"><div class="swatch-name">Primary Hover</div><div class="swatch-hex">#1D4ED8</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#F97316"></div><div class="swatch-info"><div class="swatch-name">Accent</div><div class="swatch-hex">#F97316</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#EA580C"></div><div class="swatch-info"><div class="swatch-name">Accent Hover</div><div class="swatch-hex">#EA580C</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#22C55E"></div><div class="swatch-info"><div class="swatch-name">Success</div><div class="swatch-hex">#22C55E</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#EAB308"></div><div class="swatch-info"><div class="swatch-name">Warning</div><div class="swatch-hex">#EAB308</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#EF4444"></div><div class="swatch-info"><div class="swatch-name">Error</div><div class="swatch-hex">#EF4444</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#3B82F6"></div><div class="swatch-info"><div class="swatch-name">Info</div><div class="swatch-hex">#3B82F6</div></div></div>
+    </div>
+
+    <h3 style="margin-top:24px; font-size:17px; font-weight:600; margin-bottom:12px;">Neutrals</h3>
+    <div class="palette">
+      <div class="swatch"><div class="swatch-color" style="background:#FAFAF8"></div><div class="swatch-info"><div class="swatch-name">50 Background</div><div class="swatch-hex">#FAFAF8</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#F5F5F3"></div><div class="swatch-info"><div class="swatch-name">100</div><div class="swatch-hex">#F5F5F3</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#E5E5E0"></div><div class="swatch-info"><div class="swatch-name">200 Border</div><div class="swatch-hex">#E5E5E0</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#A3A3A0"></div><div class="swatch-info"><div class="swatch-name">400 Muted</div><div class="swatch-hex">#A3A3A0</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#525250"></div><div class="swatch-info"><div class="swatch-name">600 Secondary</div><div class="swatch-hex">#525250</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#1C1C1A"></div><div class="swatch-info"><div class="swatch-name">900 Text</div><div class="swatch-hex">#1C1C1A</div></div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- UI Components -->
+  <div class="section">
+    <div class="section-title">Components</div>
+    <h2>버튼, 입력, 알림, 태그</h2>
+    <div class="components">
+      <div class="component-group">
+        <div class="component-label">Buttons</div>
+        <button class="btn btn-primary btn-lg">일정 추가</button>
+        <button class="btn btn-accent">집중 시작</button>
+        <button class="btn btn-secondary">취소</button>
+        <button class="btn btn-ghost">더보기</button>
+        <button class="btn btn-primary btn-sm">저장</button>
+      </div>
+
+      <div class="component-group">
+        <div class="component-label">Chips / Tags</div>
+        <span class="chip chip-blue">● 업무</span>
+        <span class="chip chip-orange">🍅 3세션</span>
+        <span class="chip chip-green">✓ 완료</span>
+        <span class="chip chip-red">⚡ 긴급</span>
+        <span class="chip chip-gray">나중에</span>
+      </div>
+
+      <div class="component-group" style="flex-direction: column; align-items: flex-start;">
+        <div class="component-label">Form Input</div>
+        <label class="input-label">할 일 제목</label>
+        <input class="input" type="text" placeholder="무엇을 해야 하나요?">
+      </div>
+
+      <div class="alerts" style="width: 100%;">
+        <div class="component-label">Alerts</div>
+        <div class="alert alert-success">✅ 4세션 완료! 긴 휴식을 시작하세요.</div>
+        <div class="alert alert-warning">⚠️ 내일 마감: 기획안 작성</div>
+        <div class="alert alert-error">🔴 마감 초과: 보고서 제출</div>
+        <div class="alert alert-info">💡 오전 10~12시가 가장 집중력 높은 시간입니다.</div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%;">
+        <div class="card">
+          <div class="card-title">오늘의 성과</div>
+          <div class="card-body" style="font-size: 36px; font-weight: 800; color: var(--primary); margin: 8px 0;">78%</div>
+          <div class="card-body">뽀모도로 4/5 · Todo 8/10</div>
+        </div>
+        <div class="card">
+          <div class="card-title">에너지 레벨</div>
+          <div class="card-body" style="font-size: 36px; margin: 8px 0;">⚡ 4.2</div>
+          <div class="card-body">평균 대비 +0.8 높음</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- App Mockups -->
+  <div class="section">
+    <div class="section-title">App Mockups</div>
+    <h2>실제 화면 미리보기</h2>
+
+    <div class="mockup-row">
+      <!-- Calendar Mockup -->
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <span>●●● 📶 🔋</span>
+          </div>
+          <div class="mock-header">
+            <span class="mock-month">3월</span>
+            <button class="mock-today-btn">오늘</button>
+          </div>
+          <div class="calendar-grid">
+            <div class="cal-weekdays">
+              <span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span style="color:var(--info)">토</span><span style="color:var(--error)">일</span>
+            </div>
+            <div class="cal-days">
+              <span class="cal-day other-month">24</span><span class="cal-day other-month">25</span>
+              <span class="cal-day has-event">1</span><span class="cal-day">2</span><span class="cal-day has-event">3</span><span class="cal-day">4</span><span class="cal-day weekend">5</span>
+              <span class="cal-day">6</span><span class="cal-day has-event">7</span><span class="cal-day">8</span><span class="cal-day">9</span><span class="cal-day has-event">10</span><span class="cal-day">11</span><span class="cal-day weekend">12</span>
+              <span class="cal-day">13</span><span class="cal-day">14</span><span class="cal-day">15</span><span class="cal-day has-event">16</span><span class="cal-day">17</span><span class="cal-day">18</span><span class="cal-day weekend">19</span>
+              <span class="cal-day">20</span><span class="cal-day">21</span><span class="cal-day">22</span><span class="cal-day has-event">23</span><span class="cal-day">24</span><span class="cal-day">25</span><span class="cal-day today weekend">26</span>
+              <span class="cal-day">27</span><span class="cal-day">28</span><span class="cal-day">29</span><span class="cal-day">30</span><span class="cal-day">31</span><span class="cal-day other-month">1</span><span class="cal-day other-month weekend">2</span>
+            </div>
+          </div>
+          <div style="padding:12px 16px;font-size:15px;font-weight:700;color:var(--text);">오늘, 3월 26일 수요일</div>
+          <div class="event-list">
+            <div class="event-item">
+              <span class="event-time">10:00</span>
+              <span class="event-title">팀 미팅</span>
+            </div>
+            <div class="event-item orange">
+              <span class="event-time">14:00</span>
+              <span class="event-title">🍅 기획안 작성 (3세션)</span>
+            </div>
+            <div class="event-item green">
+              <span class="event-time">17:00</span>
+              <span class="event-title">운동</span>
+            </div>
+          </div>
+          <div class="tab-bar">
+            <div class="tab-item active"><span class="tab-icon">📅</span>캘린더</div>
+            <div class="tab-item"><span class="tab-icon">🍅</span>집중</div>
+            <div class="tab-item"><span class="tab-icon">☑️</span>할 일</div>
+            <div class="tab-item"><span class="tab-icon">📊</span>관리</div>
+            <div class="tab-item"><span class="tab-icon">⚙️</span>설정</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pomodoro Mockup -->
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span>14:18</span>
+            <span>●●● 📶 🔋</span>
+          </div>
+          <div class="pomodoro-screen">
+            <div class="timer-ring">
+              <div class="timer-inner">
+                <span class="timer-time">16:42</span>
+                <span class="timer-label">집중 중</span>
+                <span class="timer-session">세션 2/4</span>
+              </div>
+            </div>
+            <div class="pomo-task">📝 기획안 작성</div>
+            <div class="pomo-controls">
+              <button class="pomo-btn pomo-btn-secondary">⏹</button>
+              <button class="pomo-btn pomo-btn-main">⏸</button>
+              <button class="pomo-btn pomo-btn-secondary">⏭</button>
+            </div>
+            <div style="margin-top:32px; display:flex; gap:16px; flex-wrap:wrap; justify-content:center;">
+              <span class="chip chip-orange">🍅 클래식 25/5</span>
+              <span class="chip chip-blue">☁️ 빗소리</span>
+            </div>
+          </div>
+          <div class="tab-bar">
+            <div class="tab-item"><span class="tab-icon">📅</span>캘린더</div>
+            <div class="tab-item active"><span class="tab-icon">🍅</span>집중</div>
+            <div class="tab-item"><span class="tab-icon">☑️</span>할 일</div>
+            <div class="tab-item"><span class="tab-icon">📊</span>관리</div>
+            <div class="tab-item"><span class="tab-icon">⚙️</span>설정</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mockup-row" style="margin-top: 32px;">
+      <!-- Todo Mockup -->
+      <div class="phone-frame">
+        <div class="phone-screen" style="position:relative;">
+          <div class="status-bar">
+            <span>9:41</span>
+            <span>●●● 📶 🔋</span>
+          </div>
+          <div class="todo-screen">
+            <div class="todo-header">
+              <span class="todo-title">오늘</span>
+              <span class="todo-count">8</span>
+            </div>
+            <div style="padding:8px 12px;background:var(--neutral-100);border-radius:var(--radius-md);margin-bottom:12px;font-size:12px;color:var(--text-secondary);">
+              📊 8개 Task · 예상 ~4.5시간 | 빈 시간: 5시간
+            </div>
+            <div class="todo-item">
+              <div class="todo-priority priority-high"></div>
+              <div class="todo-check"></div>
+              <div class="todo-content">
+                <div class="todo-item-title">기획안 최종 제출</div>
+                <div class="todo-meta">
+                  <span class="todo-due">오늘 마감</span>
+                  <span class="todo-tag">업무</span>
+                  <span class="todo-pomo">🍅 3/3</span>
+                </div>
+              </div>
+            </div>
+            <div class="todo-item">
+              <div class="todo-priority priority-medium"></div>
+              <div class="todo-check"></div>
+              <div class="todo-content">
+                <div class="todo-item-title">주간 보고서 작성</div>
+                <div class="todo-meta">
+                  <span class="todo-due">내일 마감</span>
+                  <span class="todo-tag">업무</span>
+                  <span class="todo-pomo">🍅 0/2</span>
+                </div>
+              </div>
+            </div>
+            <div class="todo-item">
+              <div class="todo-priority priority-low"></div>
+              <div class="todo-check done"></div>
+              <div class="todo-content">
+                <div class="todo-item-title done">이메일 정리</div>
+                <div class="todo-meta">
+                  <span class="todo-tag">업무</span>
+                </div>
+              </div>
+            </div>
+            <div class="todo-item">
+              <div class="todo-priority priority-high"></div>
+              <div class="todo-check"></div>
+              <div class="todo-content">
+                <div class="todo-item-title">운동 30분</div>
+                <div class="todo-meta">
+                  <span class="todo-tag">건강</span>
+                  <span style="font-size:11px;color:var(--success);">🔥 12일 스트릭</span>
+                </div>
+              </div>
+            </div>
+            <div class="todo-item">
+              <div class="todo-priority priority-medium"></div>
+              <div class="todo-check done"></div>
+              <div class="todo-content">
+                <div class="todo-item-title done">독서 20분</div>
+                <div class="todo-meta">
+                  <span class="todo-tag">학습</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="fab">+</button>
+          <div class="tab-bar">
+            <div class="tab-item"><span class="tab-icon">📅</span>캘린더</div>
+            <div class="tab-item"><span class="tab-icon">🍅</span>집중</div>
+            <div class="tab-item active"><span class="tab-icon">☑️</span>할 일</div>
+            <div class="tab-item"><span class="tab-icon">📊</span>관리</div>
+            <div class="tab-item"><span class="tab-icon">⚙️</span>설정</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Self-Management Mockup -->
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span>18:30</span>
+            <span>●●● 📶 🔋</span>
+          </div>
+          <div style="padding:16px 20px 8px;">
+            <div style="font-size:28px;font-weight:800;letter-spacing:-0.5px;">자기관리</div>
+          </div>
+          <div style="padding:0 16px;">
+            <div class="card" style="margin-bottom:12px;text-align:center;">
+              <div style="font-size:12px;font-weight:600;color:var(--text-muted);">오늘의 성과</div>
+              <div style="font-size:52px;font-weight:800;color:var(--primary);margin:4px 0;letter-spacing:-2px;">78%</div>
+              <div style="display:flex;gap:16px;justify-content:center;font-size:12px;color:var(--text-secondary);">
+                <span>🍅 4/5 세션</span>
+                <span>☑️ 8/10 완료</span>
+                <span>📅 3/3 참석</span>
+              </div>
+            </div>
+            <div class="card" style="margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:14px;font-weight:600;">에너지 레벨</span>
+                <span style="font-size:12px;color:var(--text-muted);">오후 1시 체크인</span>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:12px;">
+                <span style="font-size:28px;opacity:0.3;">😴</span>
+                <span style="font-size:28px;opacity:0.3;">😐</span>
+                <span style="font-size:28px;opacity:0.3;">🙂</span>
+                <span style="font-size:28px;border:2px solid var(--primary);border-radius:50%;padding:2px;">😊</span>
+                <span style="font-size:28px;opacity:0.3;">🔥</span>
+              </div>
+            </div>
+            <div class="card" style="margin-bottom:12px;">
+              <div style="font-size:14px;font-weight:600;margin-bottom:8px;">이번 주 습관</div>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                  <span style="font-size:14px;">💪 운동</span>
+                  <span style="font-size:12px;color:var(--success);font-weight:600;">🔥 12일</span>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                  <span style="font-size:14px;">📚 독서</span>
+                  <span style="font-size:12px;color:var(--success);font-weight:600;">🔥 5일</span>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                  <span style="font-size:14px;">🧘 명상</span>
+                  <span style="font-size:12px;color:var(--text-muted);">오늘 미완료</span>
+                </div>
+              </div>
+            </div>
+            <div style="padding:12px;background:rgba(37,99,235,0.06);border-radius:var(--radius-md);border:1px solid rgba(37,99,235,0.15);">
+              <div style="font-size:13px;font-weight:600;color:var(--primary);margin-bottom:4px;">💡 집중 인사이트</div>
+              <div style="font-size:12px;color:var(--text-secondary);">오전 10~12시에 3세션 연속 완료 — 이 시간대가 가장 집중력이 높습니다.</div>
+            </div>
+          </div>
+          <div class="tab-bar" style="margin-top:8px;">
+            <div class="tab-item"><span class="tab-icon">📅</span>캘린더</div>
+            <div class="tab-item"><span class="tab-icon">🍅</span>집중</div>
+            <div class="tab-item"><span class="tab-icon">☑️</span>할 일</div>
+            <div class="tab-item active"><span class="tab-icon">📊</span>관리</div>
+            <div class="tab-item"><span class="tab-icon">⚙️</span>설정</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Spacing Scale -->
+  <div class="section">
+    <div class="section-title">Spacing</div>
+    <h2>4pt Base · 8pt Grid</h2>
+    <div class="spacing-demo">
+      <div class="spacing-row"><span class="spacing-label">2xs — 2pt</span><div class="spacing-bar" style="width:2px;"></div></div>
+      <div class="spacing-row"><span class="spacing-label">xs — 4pt</span><div class="spacing-bar" style="width:4px;"></div></div>
+      <div class="spacing-row"><span class="spacing-label">sm — 8pt</span><div class="spacing-bar" style="width:16px;"></div></div>
+      <div class="spacing-row"><span class="spacing-label">md — 16pt</span><div class="spacing-bar" style="width:64px;"></div></div>
+      <div class="spacing-row"><span class="spacing-label">lg — 24pt</span><div class="spacing-bar" style="width:120px;"></div></div>
+      <div class="spacing-row"><span class="spacing-label">xl — 32pt</span><div class="spacing-bar" style="width:192px;"></div></div>
+      <div class="spacing-row"><span class="spacing-label">2xl — 48pt</span><div class="spacing-bar" style="width:288px;"></div></div>
+      <div class="spacing-row"><span class="spacing-label">3xl — 64pt</span><div class="spacing-bar" style="width:384px;"></div></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    로아 캘린더 Design System v1.0 — Refined Warmth<br>
+    Pretendard + SF Pro · Confident Blue + Warm Orange · 4pt/8pt Grid
+  </div>
+</div>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.getElementById('themeBtn');
+  if (html.getAttribute('data-theme') === 'dark') {
+    html.removeAttribute('data-theme');
+    btn.textContent = '🌙';
+  } else {
+    html.setAttribute('data-theme', 'dark');
+    btn.textContent = '☀️';
+  }
+}
+</script>
+</body>
+</html>
