@@ -58,6 +58,7 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.roacompany.roacalendar.tests
+        GENERATE_INFOPLIST_FILE: true
 
   RoaCalendarWidget:
     type: app-extension

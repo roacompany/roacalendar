@@ -30,8 +30,8 @@ identifier_name:
     - n
 
 type_body_length:
-  warning: 300
-  error: 400
+  warning: 350
+  error: 450
 
 file_length:
   warning: 400

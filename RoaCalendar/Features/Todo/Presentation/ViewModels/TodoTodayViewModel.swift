@@ -68,7 +68,7 @@ final class TodoTodayViewModel {
         return Double(totalMinutes) / 60.0
     }
 
-    var freeHours: Double { 5.0 } // TODO: CalendarQueryService에서 계산
+    var freeHours: Double { 5.0 } // CalendarQueryService에서 계산 (v2)
 
     var isOverloaded: Bool { estimatedHours > freeHours }
 

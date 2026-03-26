@@ -71,8 +71,8 @@ struct TodoItemView: View {
                             .font(.system(size: 11, weight: .semibold))
                             .foregroundStyle(Color.error)
                     }
-                    if let t = tag {
-                        Text(t)
+                    if let tagName = tag {
+                        Text(tagName)
                             .font(.system(size: 11, weight: .semibold))
                             .foregroundStyle(Color.primary600)
                     }

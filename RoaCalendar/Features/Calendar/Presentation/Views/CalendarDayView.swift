@@ -12,7 +12,7 @@ struct CalendarDayView: View {
             allDayStrip
             divider
 
-            ScrollViewReader { proxy in
+            ScrollViewReader { _ in
                 ScrollView {
                     ZStack(alignment: .topLeading) {
                         TimeGridView(

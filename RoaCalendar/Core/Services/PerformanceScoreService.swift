@@ -20,8 +20,8 @@ final class PerformanceScoreService {
         let composite: Double?       // 가중 평균
 
         var displayPercent: Int? {
-            guard let c = composite else { return nil }
-            return Int(c * 100)
+            guard let comp = composite else { return nil }
+            return Int(comp * 100)
         }
     }
 
@@ -89,9 +89,9 @@ final class PerformanceScoreService {
     private func calculateComposite(pomodoro: Double?, todo: Double?, calendar: Double?) -> Double? {
         var weights: [(Double, Double)] = []
 
-        if let p = pomodoro { weights.append((p, 0.4)) }
-        if let t = todo { weights.append((t, 0.4)) }
-        if let c = calendar { weights.append((c, 0.2)) }
+        if let pomScore = pomodoro { weights.append((pomScore, 0.4)) }
+        if let todoScore = todo { weights.append((todoScore, 0.4)) }
+        if let calScore = calendar { weights.append((calScore, 0.2)) }
 
         guard !weights.isEmpty else { return nil }
 

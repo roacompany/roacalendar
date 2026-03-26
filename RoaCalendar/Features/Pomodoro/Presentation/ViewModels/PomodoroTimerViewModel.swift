@@ -21,9 +21,9 @@ final class PomodoroTimerViewModel {
     var totalSeconds: Int = 25 * 60
     var sessionNumber: Int = 1
     var totalSessions: Int = 4
-    var selectedTask: String? = nil
+    var selectedTask: String?
     var presetName: String = "클래식 25/5"
-    var ambientSound: String? = nil
+    var ambientSound: String?
 
     // MARK: - 타이머 엔진 (Date 기반 재계산)
 
@@ -96,7 +96,7 @@ final class PomodoroTimerViewModel {
         Preset(name: "숏 15/5", focusMinutes: 15, shortBreakMinutes: 5, longBreakMinutes: 15),
         Preset(name: "확장 50/10", focusMinutes: 50, shortBreakMinutes: 10, longBreakMinutes: 20),
         Preset(name: "52/17", focusMinutes: 52, shortBreakMinutes: 17, longBreakMinutes: nil),
-        Preset(name: "울트라 90/20", focusMinutes: 90, shortBreakMinutes: 20, longBreakMinutes: nil),
+        Preset(name: "울트라 90/20", focusMinutes: 90, shortBreakMinutes: 20, longBreakMinutes: nil)
     ]
 
     // MARK: - 액션

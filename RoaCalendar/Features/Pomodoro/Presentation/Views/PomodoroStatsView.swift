@@ -45,10 +45,19 @@ struct PomodoroStatsView: View {
 
     // MARK: - 주간 바 차트
 
+    struct ChartData: Identifiable {
+        let id: String
+        let focus: Double
+        let overflow: Double
+        init(_ day: String, _ focus: Double, _ overflow: Double) {
+            self.id = day; self.focus = focus; self.overflow = overflow
+        }
+    }
+
     private var weeklyChart: some View {
-        let data: [(String, Double, Double)] = [
-            ("월", 1.5, 0.2), ("화", 2.0, 0.5), ("수", 1.8, 0.0),
-            ("목", 2.5, 0.3), ("금", 1.0, 0.0), ("토", 0.5, 0.0), ("일", 0.0, 0.0)
+        let data: [ChartData] = [
+            ChartData("월", 1.5, 0.2), ChartData("화", 2.0, 0.5), ChartData("수", 1.8, 0.0),
+            ChartData("목", 2.5, 0.3), ChartData("금", 1.0, 0.0), ChartData("토", 0.5, 0.0), ChartData("일", 0.0, 0.0)
         ]
         let maxVal = 3.0
 
@@ -67,15 +76,15 @@ struct PomodoroStatsView: View {
                             VStack(spacing: 0) {
                                 RoundedRectangle(cornerRadius: 4)
                                     .fill(Color.accent500)
-                                    .frame(width: 32, height: max(CGFloat(item.2 / maxVal) * 120, 0))
+                                    .frame(width: 32, height: max(CGFloat(item.overflow / maxVal) * 120, 0))
 
                                 RoundedRectangle(cornerRadius: 4)
                                     .fill(Color.primary600)
-                                    .frame(width: 32, height: max(CGFloat(item.1 / maxVal) * 120, 0))
+                                    .frame(width: 32, height: max(CGFloat(item.focus / maxVal) * 120, 0))
                             }
                         }
 
-                        Text(item.0)
+                        Text(item.id)
                             .font(.system(size: 11, weight: index == 3 ? .bold : .medium))
                             .foregroundStyle(index == 3 ? Color.primary600 : Color.neutral400)
                     }

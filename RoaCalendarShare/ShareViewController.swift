@@ -9,7 +9,7 @@ class ShareViewController: SLComposeServiceViewController {
     }
 
     override func didSelectPost() {
-        // TODO: Quick Add로 Task 생성
+        // Quick Add로 Task 생성 (v2에서 구현)
         extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
     }
 }

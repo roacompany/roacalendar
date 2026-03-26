@@ -33,9 +33,9 @@ struct SelfManageDashboardView: View {
     }
 
     private var scoreColor: Color {
-        guard let s = scorePercent else { return .neutral400 }
-        if s >= 80 { return .success }
-        if s >= 60 { return .warning }
+        guard let score = scorePercent else { return .neutral400 }
+        if score >= 80 { return .success }
+        if score >= 60 { return .warning }
         return .error
     }
 

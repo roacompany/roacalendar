@@ -85,16 +85,16 @@ struct TaskDetailView: View {
                         .font(.system(size: 15, weight: .medium))
                     Spacer()
                     HStack(spacing: Spacing.xs) {
-                        ForEach(Priority.allCases, id: \.self) { p in
+                        ForEach(Priority.allCases, id: \.self) { priority in
                             Button {
-                                selectedPriority = p
+                                selectedPriority = priority
                             } label: {
-                                Text(priorityLabel(p))
+                                Text(priorityLabel(priority))
                                     .font(.system(size: 12, weight: .semibold))
-                                    .foregroundStyle(selectedPriority == p ? .white : Color.neutral600)
+                                    .foregroundStyle(selectedPriority == priority ? .white : Color.neutral600)
                                     .padding(.horizontal, Spacing.sm)
                                     .padding(.vertical, Spacing.xxs + 2)
-                                    .background(selectedPriority == p ? priorityColor(p) : Color.neutral100)
+                                    .background(selectedPriority == priority ? priorityColor(priority) : Color.neutral100)
                                     .clipShape(Capsule())
                             }
                         }
@@ -339,8 +339,8 @@ struct TaskDetailView: View {
             .clipShape(Capsule())
     }
 
-    private func priorityLabel(_ p: Priority) -> String {
-        switch p {
+    private func priorityLabel(_ level: Priority) -> String {
+        switch level {
         case .none: "없음"
         case .low: "낮음"
         case .medium: "보통"
@@ -348,8 +348,8 @@ struct TaskDetailView: View {
         }
     }
 
-    private func priorityColor(_ p: Priority) -> Color {
-        switch p {
+    private func priorityColor(_ level: Priority) -> Color {
+        switch level {
         case .high: .error
         case .medium: .warning
         case .low: .info

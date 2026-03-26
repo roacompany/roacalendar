@@ -15,7 +15,7 @@ struct RoaCalendarApp: App {
             TaskModel.self,
             ProjectModel.self,
             HeadingModel.self,
-            SubtaskModel.self,
+            SubtaskModel.self
         ])
         let config = ModelConfiguration(
             schema: schema,

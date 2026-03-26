@@ -6,11 +6,17 @@ struct OnboardingView: View {
     @State private var currentStep = 0
     @Binding var hasCompletedOnboarding: Bool
 
-    let features: [(String, String, String)] = [
-        ("📅", "캘린더", "구글 캘린더 수준의 일정 관리"),
-        ("🍅", "집중", "뽀모도로 타이머로 생산성 향상"),
-        ("☑️", "할 일", "3가지 날짜 시스템으로 체계적 관리"),
-        ("📊", "자기관리", "통계, 리뷰, 목표로 성장 추적"),
+    struct FeatureItem {
+        let icon: String
+        let title: String
+        let description: String
+    }
+
+    let features: [FeatureItem] = [
+        FeatureItem(icon: "📅", title: "캘린더", description: "구글 캘린더 수준의 일정 관리"),
+        FeatureItem(icon: "🍅", title: "집중", description: "뽀모도로 타이머로 생산성 향상"),
+        FeatureItem(icon: "☑️", title: "할 일", description: "3가지 날짜 시스템으로 체계적 관리"),
+        FeatureItem(icon: "📊", title: "자기관리", description: "통계, 리뷰, 목표로 성장 추적")
     ]
 
     var body: some View {
@@ -80,13 +86,13 @@ struct OnboardingView: View {
 
             Spacer()
 
-            Text(feature.0)
+            Text(feature.icon)
                 .font(.system(size: 80))
 
-            Text(feature.1)
+            Text(feature.title)
                 .font(.system(size: 28, weight: .bold))
 
-            Text(feature.2)
+            Text(feature.description)
                 .font(.roaBody)
                 .foregroundStyle(Color.neutral600)
 

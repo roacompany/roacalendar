@@ -3,12 +3,20 @@ import SwiftUI
 // MARK: - 습관 트래커
 
 struct HabitTrackerView: View {
-    @State private var habits: [(String, String, Bool, String?)] = [
-        ("💪", "운동 30분", true, "🔥 12일"),
-        ("📚", "독서 20분", true, "🔥 5일"),
-        ("🧘", "명상 10분", false, nil),
-        ("💧", "물 8잔", false, nil),
-        ("📝", "일기 쓰기", false, nil),
+    struct HabitItem: Identifiable {
+        let id = UUID()
+        let emoji: String
+        let title: String
+        var isDone: Bool
+        let streak: String?
+    }
+
+    @State private var habits: [HabitItem] = [
+        HabitItem(emoji: "💪", title: "운동 30분", isDone: true, streak: "🔥 12일"),
+        HabitItem(emoji: "📚", title: "독서 20분", isDone: true, streak: "🔥 5일"),
+        HabitItem(emoji: "🧘", title: "명상 10분", isDone: false, streak: nil),
+        HabitItem(emoji: "💧", title: "물 8잔", isDone: false, streak: nil),
+        HabitItem(emoji: "📝", title: "일기 쓰기", isDone: false, streak: nil)
     ]
 
     var body: some View {
@@ -35,27 +43,27 @@ struct HabitTrackerView: View {
         VStack(spacing: 0) {
             ForEach(Array(habits.enumerated()), id: \.offset) { index, habit in
                 HStack(spacing: Spacing.sm) {
-                    Text(habit.0).font(.system(size: 22))
+                    Text(habit.emoji).font(.system(size: 22))
 
-                    Text(habit.1)
+                    Text(habit.title)
                         .font(.system(size: 15, weight: .medium))
-                        .strikethrough(habit.2)
-                        .foregroundStyle(habit.2 ? Color.neutral400 : Color.primary)
+                        .strikethrough(habit.isDone)
+                        .foregroundStyle(habit.isDone ? Color.neutral400 : Color.primary)
 
                     Spacer()
 
-                    if let streak = habit.3 {
+                    if let streak = habit.streak {
                         Text(streak)
                             .font(.system(size: 12, weight: .semibold))
                             .foregroundStyle(Color.success)
                     }
 
                     Circle()
-                        .strokeBorder(habit.2 ? Color.success : Color.neutral200, lineWidth: 2)
-                        .background(Circle().fill(habit.2 ? Color.success : Color.clear))
+                        .strokeBorder(habit.isDone ? Color.success : Color.neutral200, lineWidth: 2)
+                        .background(Circle().fill(habit.isDone ? Color.success : Color.clear))
                         .frame(width: 24, height: 24)
                         .overlay {
-                            if habit.2 {
+                            if habit.isDone {
                                 Image(systemName: "checkmark")
                                     .font(.system(size: 11, weight: .bold))
                                     .foregroundStyle(.white)
@@ -63,7 +71,7 @@ struct HabitTrackerView: View {
                         }
                         .onTapGesture {
                             withAnimation(.spring(duration: 0.2)) {
-                                habits[index].2.toggle()
+                                habits[index].isDone.toggle()
                             }
                         }
                 }
