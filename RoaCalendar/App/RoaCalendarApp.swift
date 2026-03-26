@@ -7,7 +7,14 @@ struct RoaCalendarApp: App {
 
     init() {
         let schema = Schema([
-            // Core 공유 모델
+            RoaCalendar.self,
+            Reminder.self,
+            RecurrenceRule.self,
+            CalendarEventModel.self,
+            TaskModel.self,
+            ProjectModel.self,
+            HeadingModel.self,
+            SubtaskModel.self,
         ])
         let config = ModelConfiguration(
             schema: schema,
