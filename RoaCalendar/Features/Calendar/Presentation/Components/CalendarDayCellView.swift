@@ -54,6 +54,6 @@ struct CalendarDayCellView: View {
         if !isCurrentMonth { return .neutral400.opacity(0.4) }
         if isSunday { return .error }
         if isSaturday { return .info }
-        return .primary
+        return .neutral900
     }
 }

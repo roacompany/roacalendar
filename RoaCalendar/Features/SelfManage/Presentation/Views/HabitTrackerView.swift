@@ -48,7 +48,7 @@ struct HabitTrackerView: View {
                     Text(habit.title)
                         .font(.system(size: 15, weight: .medium))
                         .strikethrough(habit.isDone)
-                        .foregroundStyle(habit.isDone ? Color.neutral400 : Color.primary)
+                        .foregroundStyle(habit.isDone ? Color.neutral400 : Color.neutral900)
 
                     Spacer()
 

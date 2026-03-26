@@ -61,7 +61,7 @@ struct TodoItemView: View {
             Text(title)
                 .font(.system(size: 15, weight: .medium))
                 .strikethrough(isDone)
-                .foregroundStyle(isDone ? Color.neutral400 : Color.primary)
+                .foregroundStyle(isDone ? Color.neutral400 : Color.neutral900)
                 .lineLimit(1)
 
             if !isDone {

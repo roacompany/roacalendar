@@ -73,7 +73,7 @@ struct CalendarYearView: View {
         return VStack(spacing: Spacing.xs) {
             Text("\(month)월")
                 .font(.system(size: 14, weight: .bold))
-                .foregroundStyle(isCurrentMonth(month) ? Color.primary600 : Color.primary)
+                .foregroundStyle(isCurrentMonth(month) ? Color.primary600 : Color.neutral900)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading, Spacing.xs)
 
@@ -92,7 +92,7 @@ struct CalendarYearView: View {
                     let isToday = isToday(year: currentYear, month: month, day: day)
                     Text("\(day)")
                         .font(.system(size: 8, weight: isToday ? .bold : .regular))
-                        .foregroundStyle(isToday ? .white : Color.primary)
+                        .foregroundStyle(isToday ? .white : Color.neutral900)
                         .frame(width: 14, height: 14)
                         .background(
                             Circle().fill(isToday ? Color.primary600 : Color.clear)
