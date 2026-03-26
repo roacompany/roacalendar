@@ -16,10 +16,10 @@
 		0FEA82BC2FDB03120007E11E /* CalendarInitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01BF33C60A28F9861438422 /* CalendarInitService.swift */; };
 		12344BAF5B7CDBF167F72B37 /* Reminder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8C373A67E1CDEDFEF5D8C /* Reminder.swift */; };
 		12AFA4A27874013240C9FE1E /* CalendarDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2276DD1894E9790EBA9EEF1 /* CalendarDayView.swift */; };
+		19D5E8BF6DD983F6E0936E02 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDD4F588863BA2556F08201C /* Assets.xcassets */; };
 		1A33AC02AEEF2FBAB74FF059 /* EisenhowerMatrixView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B971BD2D858140F84ADE42C /* EisenhowerMatrixView.swift */; };
 		2883E14BCF7E9FB7F6F92ED3 /* WeeklyReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD26FD8B1396344920E7A41D /* WeeklyReviewView.swift */; };
 		2A5B6BCEC142AC07DE201A61 /* PomodoroSessionRecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA79F93B95F638FAB2CD5CDE /* PomodoroSessionRecordView.swift */; };
-		2A9A27F5BEA6E8C11C88E6C8 /* RoaCalendarWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB469719080FEB77C2BBD72 /* RoaCalendarWidget.swift */; };
 		2D5BF89B040CAEB1A6EDD169 /* Spacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD4DFCB7DC9EF541B8C505C /* Spacing.swift */; };
 		30513A04CC2011AD2DB6E8D3 /* CalendarQueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E86DD64188BED649863C447 /* CalendarQueryService.swift */; };
 		32C48AB7913040696861B79E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 33DE007AA5D552E09C368AC4 /* PrivacyInfo.xcprivacy */; };
@@ -43,7 +43,6 @@
 		AD3125D0D027285B2BABE22C /* CalendarMonthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2451855E7D958E305E438AC /* CalendarMonthViewModel.swift */; };
 		B301AA2708D479B27F02597C /* OriginalEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09DB0D86BE332AAC5DC65B67 /* OriginalEvent.swift */; };
 		BF557B5DC7F88A12B84CBAE2 /* CalendarDayCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC1FD8667C3997337A5842A /* CalendarDayCellView.swift */; };
-		C0F1754763D4263DC70CB6C1 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB52E4F82CE003E4B42F2CA /* ShareViewController.swift */; };
 		C47BD8560AB846F7D2F9D7EE /* TaskService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779383B4B728E1F05AD737F6 /* TaskService.swift */; };
 		C6898C78966BC467765110FC /* CalendarDayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5792E90FC0FD7C6DEB04937 /* CalendarDayViewModel.swift */; };
 		C72C54EFD03184D7D1198A3B /* PomodoroTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCE4184E221B1B89CF12BC4 /* PomodoroTimerView.swift */; };
@@ -60,21 +59,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		61D04537D7D9C75CFA17B39B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5A33D65204A71CD91449B0ED /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E282620F61D949CF629FB00F;
-			remoteInfo = RoaCalendar;
-		};
 		666E10A61359202C28BDD115 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5A33D65204A71CD91449B0ED /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E282620F61D949CF629FB00F;
-			remoteInfo = RoaCalendar;
-		};
-		D4259835730A9A88B084F5B2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5A33D65204A71CD91449B0ED /* Project object */;
 			proxyType = 1;
@@ -88,19 +73,16 @@
 		0964203C6C289358189F0F0E /* HabitTrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitTrackerView.swift; sourceTree = "<group>"; };
 		09DB0D86BE332AAC5DC65B67 /* OriginalEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OriginalEvent.swift; sourceTree = "<group>"; };
 		0A3255A936F7F62809BFA069 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
-		18CBE9A8D6AEB4FB1BE62145 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1B0A27211A2BF9F283C1AF3D /* EventColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventColor.swift; sourceTree = "<group>"; };
 		2078571A6C742017C8D8BADE /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2615150A9559A5E208A9B67A /* TimeGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeGridView.swift; sourceTree = "<group>"; };
 		2B971BD2D858140F84ADE42C /* EisenhowerMatrixView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EisenhowerMatrixView.swift; sourceTree = "<group>"; };
-		2D8ACF12E956B772ED4D3B52 /* RoaCalendarWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoaCalendarWidget.entitlements; sourceTree = "<group>"; };
 		33DE007AA5D552E09C368AC4 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		35FDF0B43087C09634F9EC4F /* TodoItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoItemView.swift; sourceTree = "<group>"; };
 		3A9CFD8C00C7C312C6FBDC25 /* PomodoroTimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerViewModel.swift; sourceTree = "<group>"; };
 		3DA5DD4D6145CEE65BD84C8E /* SubtaskModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtaskModel.swift; sourceTree = "<group>"; };
 		44391DBF61333BC90C49002F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		44C477F079B874F2EDA3498A /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
-		44C670DC7000D934C9FDD7AD /* RoaCalendarWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = RoaCalendarWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		483F987AEA247A59CE8612A9 /* PomodoroStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroStatsView.swift; sourceTree = "<group>"; };
 		48F895FF65DFA41ACAEB512D /* TaskDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailView.swift; sourceTree = "<group>"; };
 		4EB8C373A67E1CDEDFEF5D8C /* Reminder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reminder.swift; sourceTree = "<group>"; };
@@ -108,7 +90,6 @@
 		50628E63C1EBAAA9BBF88FDC /* RoaCalendarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoaCalendarApp.swift; sourceTree = "<group>"; };
 		5A205B186D9C1F5F98D60FAF /* RoaCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoaCalendar.swift; sourceTree = "<group>"; };
 		6A376E325B85D271A8F74864 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		6B6043927BDB9A75CA583AC5 /* RoaCalendarShare.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = RoaCalendarShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E1C0FBF2C398C50E26477D4 /* CalendarWeekView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarWeekView.swift; sourceTree = "<group>"; };
 		731AE49629A17AB640058458 /* ProjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectModel.swift; sourceTree = "<group>"; };
 		779383B4B728E1F05AD737F6 /* TaskService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskService.swift; sourceTree = "<group>"; };
@@ -126,12 +107,10 @@
 		BADCDE3A132EF025558B2155 /* TaskModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskModel.swift; sourceTree = "<group>"; };
 		BBD4DFCB7DC9EF541B8C505C /* Spacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spacing.swift; sourceTree = "<group>"; };
 		BD26FD8B1396344920E7A41D /* WeeklyReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyReviewView.swift; sourceTree = "<group>"; };
-		BDB469719080FEB77C2BBD72 /* RoaCalendarWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoaCalendarWidget.swift; sourceTree = "<group>"; };
 		C1FEEFB39F1656A98C4E1FDE /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		C2FC3DB9193CFCEC0C605D5A /* RecurrenceRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecurrenceRule.swift; sourceTree = "<group>"; };
-		C9B5130C6FFB0E41174F8308 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		CA85FB3F1F217DA0E2D20E9B /* CalendarMonthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarMonthView.swift; sourceTree = "<group>"; };
-		CAB52E4F82CE003E4B42F2CA /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		CDD4F588863BA2556F08201C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CE8CD49576C352D5DD7C6871 /* SelfManageDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfManageDashboardView.swift; sourceTree = "<group>"; };
 		CF6E1A003C6493E0BE7E29C4 /* RoaCalendar.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = RoaCalendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2276DD1894E9790EBA9EEF1 /* CalendarDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarDayView.swift; sourceTree = "<group>"; };
@@ -185,15 +164,6 @@
 			path = Mappers;
 			sourceTree = "<group>";
 		};
-		104010402460DF768EC32C66 /* RoaCalendarShare */ = {
-			isa = PBXGroup;
-			children = (
-				C9B5130C6FFB0E41174F8308 /* Info.plist */,
-				CAB52E4F82CE003E4B42F2CA /* ShareViewController.swift */,
-			);
-			path = RoaCalendarShare;
-			sourceTree = "<group>";
-		};
 		1169905CA0678B755320A3DA /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -233,16 +203,6 @@
 				2ED518DF3CFE9D577EC372A1 /* Views */,
 			);
 			path = Presentation;
-			sourceTree = "<group>";
-		};
-		27AD5CFAFEAD8748E23217CF /* RoaCalendarWidget */ = {
-			isa = PBXGroup;
-			children = (
-				18CBE9A8D6AEB4FB1BE62145 /* Info.plist */,
-				2D8ACF12E956B772ED4D3B52 /* RoaCalendarWidget.entitlements */,
-				BDB469719080FEB77C2BBD72 /* RoaCalendarWidget.swift */,
-			);
-			path = RoaCalendarWidget;
 			sourceTree = "<group>";
 		};
 		2E37F4FE8D0D68508847AF01 /* Components */ = {
@@ -403,9 +363,7 @@
 			isa = PBXGroup;
 			children = (
 				CF6E1A003C6493E0BE7E29C4 /* RoaCalendar.app */,
-				6B6043927BDB9A75CA583AC5 /* RoaCalendarShare.appex */,
 				A5949F86398C05A09F80B56B /* RoaCalendarTests.xctest */,
-				44C670DC7000D934C9FDD7AD /* RoaCalendarWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -593,6 +551,7 @@
 		A2DDD72F7A81468BB0B65400 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				CDD4F588863BA2556F08201C /* Assets.xcassets */,
 				6A376E325B85D271A8F74864 /* Info.plist */,
 				33DE007AA5D552E09C368AC4 /* PrivacyInfo.xcprivacy */,
 			);
@@ -637,9 +596,7 @@
 			isa = PBXGroup;
 			children = (
 				11EA761C0BD4198905E5D6E0 /* RoaCalendar */,
-				104010402460DF768EC32C66 /* RoaCalendarShare */,
 				1D07077DD64CAE7C091838D9 /* RoaCalendarTests */,
-				27AD5CFAFEAD8748E23217CF /* RoaCalendarWidget */,
 				5D2F82073F9732E46A9D5360 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -846,42 +803,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		486260C739E2A61972B53D3D /* RoaCalendarShare */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 3B18D225A27C82EF0EC6ED42 /* Build configuration list for PBXNativeTarget "RoaCalendarShare" */;
-			buildPhases = (
-				1159B271FB424F65190E9A7D /* Sources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				C00A2FB457BEC80435CE7385 /* PBXTargetDependency */,
-			);
-			name = RoaCalendarShare;
-			packageProductDependencies = (
-			);
-			productName = RoaCalendarShare;
-			productReference = 6B6043927BDB9A75CA583AC5 /* RoaCalendarShare.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
-		5509401AD10A7942709236B4 /* RoaCalendarWidget */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4E58D941A6337B06011F39A0 /* Build configuration list for PBXNativeTarget "RoaCalendarWidget" */;
-			buildPhases = (
-				E5B95F6AF23750A30761E4A2 /* Sources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				EB96D049CA876648DC794BBE /* PBXTargetDependency */,
-			);
-			name = RoaCalendarWidget;
-			packageProductDependencies = (
-			);
-			productName = RoaCalendarWidget;
-			productReference = 44C670DC7000D934C9FDD7AD /* RoaCalendarWidget.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
 		D39B5E0E335850259D388AF8 /* RoaCalendarTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 779BCF9BA1B8D23A321A9A74 /* Build configuration list for PBXNativeTarget "RoaCalendarTests" */;
@@ -927,14 +848,6 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
-					486260C739E2A61972B53D3D = {
-						DevelopmentTeam = R24J6R4S7X;
-						ProvisioningStyle = Manual;
-					};
-					5509401AD10A7942709236B4 = {
-						DevelopmentTeam = R24J6R4S7X;
-						ProvisioningStyle = Manual;
-					};
 					D39B5E0E335850259D388AF8 = {
 						DevelopmentTeam = R24J6R4S7X;
 						ProvisioningStyle = Manual;
@@ -960,9 +873,7 @@
 			projectRoot = "";
 			targets = (
 				E282620F61D949CF629FB00F /* RoaCalendar */,
-				486260C739E2A61972B53D3D /* RoaCalendarShare */,
 				D39B5E0E335850259D388AF8 /* RoaCalendarTests */,
-				5509401AD10A7942709236B4 /* RoaCalendarWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -972,6 +883,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19D5E8BF6DD983F6E0936E02 /* Assets.xcassets in Resources */,
 				32C48AB7913040696861B79E /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1032,27 +944,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1159B271FB424F65190E9A7D /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C0F1754763D4263DC70CB6C1 /* ShareViewController.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		8C00DC5D1AB21ED8FA8471D1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				576859573DDB8517EE614840 /* RoaCalendarTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E5B95F6AF23750A30761E4A2 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2A9A27F5BEA6E8C11C88E6C8 /* RoaCalendarWidget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1063,16 +959,6 @@
 			isa = PBXTargetDependency;
 			target = E282620F61D949CF629FB00F /* RoaCalendar */;
 			targetProxy = 666E10A61359202C28BDD115 /* PBXContainerItemProxy */;
-		};
-		C00A2FB457BEC80435CE7385 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = E282620F61D949CF629FB00F /* RoaCalendar */;
-			targetProxy = 61D04537D7D9C75CFA17B39B /* PBXContainerItemProxy */;
-		};
-		EB96D049CA876648DC794BBE /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = E282620F61D949CF629FB00F /* RoaCalendar */;
-			targetProxy = D4259835730A9A88B084F5B2 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1094,22 +980,6 @@
 			};
 			name = Release;
 		};
-		4423746664B834608C558D59 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = RoaCalendarWidget/RoaCalendarWidget.entitlements;
-				INFOPLIST_FILE = RoaCalendarWidget/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.roacompany.roacalendar.widget;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
 		4A690EBB3CA96A8EEE2FE76C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1122,25 +992,11 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.roacompany.roacalendar;
+				PROVISIONING_PROFILE_SPECIFIER = RoaCalendar_AppStore_v2;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
-		};
-		72522CAF15370CFED7F891FB /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = RoaCalendarShare/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.roacompany.roacalendar.share;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
 		};
 		78A7C5C29B70ACCA5B4E760F /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1175,6 +1031,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1200,6 +1057,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				"INFOPLIST_KEY_UISupportedInterfaceOrientations~ipad" = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MARKETING_VERSION = 1.0.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -1248,6 +1106,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1267,6 +1126,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				"INFOPLIST_KEY_UISupportedInterfaceOrientations~ipad" = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MARKETING_VERSION = 1.0.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -1278,37 +1138,6 @@
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Release;
-		};
-		9E0CC4AA9F92A83F1AFAC971 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = RoaCalendarWidget/RoaCalendarWidget.entitlements;
-				INFOPLIST_FILE = RoaCalendarWidget/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.roacompany.roacalendar.widget;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		A091854A8E00BBA0D41F0585 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = RoaCalendarShare/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.roacompany.roacalendar.share;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -1324,6 +1153,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.roacompany.roacalendar;
+				PROVISIONING_PROFILE_SPECIFIER = RoaCalendar_AppStore_v2;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1363,24 +1193,6 @@
 			buildConfigurations = (
 				A88CA75180208B4663FF03E1 /* Debug */,
 				4A690EBB3CA96A8EEE2FE76C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		3B18D225A27C82EF0EC6ED42 /* Build configuration list for PBXNativeTarget "RoaCalendarShare" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				72522CAF15370CFED7F891FB /* Debug */,
-				A091854A8E00BBA0D41F0585 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		4E58D941A6337B06011F39A0 /* Build configuration list for PBXNativeTarget "RoaCalendarWidget" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4423746664B834608C558D59 /* Debug */,
-				9E0CC4AA9F92A83F1AFAC971 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

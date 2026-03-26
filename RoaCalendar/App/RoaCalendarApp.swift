@@ -17,10 +17,8 @@ struct RoaCalendarApp: App {
             HeadingModel.self,
             SubtaskModel.self
         ])
-        let config = ModelConfiguration(
-            schema: schema,
-            groupContainer: .identifier("group.com.roacompany.roacalendar")
-        )
+        // App Group은 Widget 추가 시 활성화 (v1.1)
+        let config = ModelConfiguration(schema: schema)
         do {
             container = try ModelContainer(for: schema, configurations: [config])
         } catch {
