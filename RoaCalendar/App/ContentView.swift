@@ -8,7 +8,7 @@ struct ContentView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             Tab("캘린더", systemImage: "calendar", value: .calendar) {
-                CalendarPlaceholderView()
+                CalendarMonthView()
             }
 
             Tab("집중", systemImage: "timer", value: .pomodoro) {
