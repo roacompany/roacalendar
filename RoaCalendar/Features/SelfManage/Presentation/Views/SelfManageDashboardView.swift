@@ -3,6 +3,9 @@ import SwiftUI
 // MARK: - 자기관리 대시보드
 
 struct SelfManageDashboardView: View {
+    @Environment(\.modelContext) private var modelContext
+    @State private var scorePercent: Int?
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -19,7 +22,21 @@ struct SelfManageDashboardView: View {
             .background(Color.bgLight)
             .navigationTitle("자기관리")
             .navigationBarTitleDisplayMode(.large)
+            .onAppear { loadScore() }
         }
+    }
+
+    private func loadScore() {
+        let service = PerformanceScoreService(context: modelContext)
+        let score = service.calculateTodayScore()
+        scorePercent = score.displayPercent
+    }
+
+    private var scoreColor: Color {
+        guard let s = scorePercent else { return .neutral400 }
+        if s >= 80 { return .success }
+        if s >= 60 { return .warning }
+        return .error
     }
 
     // MARK: - 성과 점수 카드
@@ -30,9 +47,9 @@ struct SelfManageDashboardView: View {
                 .font(.roaCaption)
                 .foregroundStyle(Color.neutral400)
 
-            Text("78%")
+            Text(scorePercent.map { "\($0)%" } ?? "—")
                 .font(.system(size: 52, weight: .heavy))
-                .foregroundStyle(Color.primary600)
+                .foregroundStyle(scoreColor)
                 .monospacedDigit()
 
             HStack(spacing: Spacing.md) {
